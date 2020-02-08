@@ -23,12 +23,12 @@ public class Menu extends AppMenu {
 		this.setTitle("Menu des jeux");
 		this.setSubtitle("Sans sous-titre");
 		this.setMenu(Arrays.asList(new MenuItem[] {
-			new MenuItem(AppGame.TITLES[AppGame.PAGES_GAME]) {
+			new MenuItem(AppGame.TITLES[AppGame.GAMES_TETRIS_BATTLE_WORLD]) {
 				public void itemSelected() {
 					Pause pause = (Pause) game.getState(AppGame.PAGES_PAUSE);
-					pause.setPreviousID(AppGame.PAGES_GAME);
+					pause.setPreviousID(AppGame.GAMES_TETRIS_BATTLE_WORLD);
 					pause.setNextID(AppGame.PAGES_MENU);
-					game.enterState(AppGame.PAGES_GAME);
+					game.enterState(AppGame.GAMES_TETRIS_BATTLE_WORLD);
 				}
 			},
 			new MenuItem("Retour") {

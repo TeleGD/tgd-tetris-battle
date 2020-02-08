@@ -10,13 +10,13 @@ public abstract class AppGame extends StateBasedGame {
 	public static final int PAGES_WELCOME = 0;
 	public static final int PAGES_MENU = 1;
 	public static final int PAGES_PAUSE = 2;
-	public static final int PAGES_GAME = 3;
+	public static final int GAMES_TETRIS_BATTLE_WORLD = 3;
 
 	public static final String[] TITLES = new String[] {
 		"Accueil",
 		"Menu",
 		"Pause",
-		"Jeu"
+		"Tetris Battle"
 	};
 
 	public AppGame(String name, int height, boolean fullscreen) {

@@ -1,4 +1,4 @@
-package games.test;
+package games.tetrisBattle;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
