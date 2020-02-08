@@ -1,0 +1,50 @@
+@startuml
+
+class World {
+  List<Player> player
+}
+
+class Player{
+  Tetris tetris
+  int axisX
+  int axisY
+  int score
+  int mana
+  List<Spell> spells
+}
+
+class Tetris {
+  List<Block> blocks
+  List<List<Square>> squares
+  List<Block> nextBlocks
+}
+
+class Block{
+  List<Square> squares
+}
+
+class Square{
+  Block block
+  List<Square> neighbors
+}
+
+class SpellStore{
+  List<Spell>
+}
+
+abstract class Spell{
+  Player caster
+  Player target
+  int manaCost
+  void apply()
+}
+
+Block "1" -- "*" Square
+Tetris -- "*" Block
+Tetris -- "*" Square
+Square -- "*" Square
+World - "2" Player
+Player - "1" Tetris
+World -- "2" Spell
+
+@enduml
