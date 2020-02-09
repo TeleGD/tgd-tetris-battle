@@ -121,5 +121,6 @@ public class Multimino {
 	public Boolean getMarkedDeleted() {
 		return markedDelete;
 	}
+	
 
 }
