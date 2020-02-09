@@ -1,10 +1,13 @@
 package games.tetrisBattle;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Multimino {
-
 
 	private int blockCount;
 	private List<List<Block>> blocks;
@@ -12,11 +15,15 @@ public class Multimino {
 	private int j; //colonne du bloc en haut à gauche du multimino
 	private Boolean markedDelete;
 
+	private String shapeName;
+
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
 		ArrayList<Block> l2 = new ArrayList<Block>();
 		ArrayList<Block> l3 = new ArrayList<Block>();
 		ArrayList<Block> l4 = new ArrayList<Block>();
+
+		this.shapeName = nameBlock;
 
 		switch(nameBlock) {
 			case "I":
@@ -118,6 +125,10 @@ public class Multimino {
 		return this.i;
 	}
 
+	public List<List<Block>> getShape() {
+		return this.blocks;
+	}
+
 	public int getJ() {
 		return this.j;
 	}
@@ -137,7 +148,7 @@ public class Multimino {
 	public Boolean getMarkedDeleted() {
 		return markedDelete;
 	}
-	
+
 
 	private void linkNeighbour() {
 		for (int i=0; i<4; i++) {
@@ -244,4 +255,26 @@ public class Multimino {
 			}
 		}
 	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics context, float width, float height){
+		List<Block> blockLine = null;
+		for (int i = 0; i < blocks.size() ; i++){
+			blockLine = blocks.get(i);
+			for(int j = 0 ; j < blockLine.size() ; j++){
+				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : adapter les x et y en fonction de la position de ce Multimino
+			}
+		}
+	}
+
+	public Multimino transform(int clockWise, int toBottom, int toRight) {
+		// TODO
+		return null;
+	}
+
+
+	public String getShapeName() {
+		return(shapeName);
+	}
 }
+
+
