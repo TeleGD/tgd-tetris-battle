@@ -5,9 +5,12 @@ import java.util.List;
 
 public class Multimino {
 
+
+	private int blockCount;
 	private List<List<Block>> blocks;
 	private int i; //étage du bloc en haut à gauche du multimino
 	private int j; //colonne du bloc en haut à gauche du multimino
+	private Boolean markedDelete;
 
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
@@ -110,6 +113,23 @@ public class Multimino {
 
 	public int getJ() {
 		return this.j;
+	}
+
+	public void removeBlock(Block block) {
+		blockCount--;
+		// Si le block en entrée est le dernier block du Multimino, on lui place la marque de la mort
+		if (blockCount == 0) {
+			markedDelete = true;
+			return;
+		}
+		for (List<Block> line : blocks) {
+			line.remove(block);
+		}
+
+	}
+
+	public Boolean getMarkedDeleted() {
+		return markedDelete;
 	}
 
 }

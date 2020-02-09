@@ -10,5 +10,10 @@ public class Block {
 	public Block() {
 		
 	}
+	
+	
+	public void delete() {
+		multimino.removeBlock(this);
+	}
 
 }
