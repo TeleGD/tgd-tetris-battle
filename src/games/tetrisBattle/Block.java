@@ -16,6 +16,9 @@ public class Block {
 		this.neighbours = new Block[4];
 	}
 	
+	public void delete() {
+		multimino.removeBlock(this);}
+	
 	public void addNeighbour(int position, Block block) {
 		this.neighbours[position]=block;
 	}

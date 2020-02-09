@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Multimino {
-	
+	private int blockCount;
 	private List<List<Block>> blocks;
+	private Boolean markedDelete;
 	
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
@@ -107,6 +108,17 @@ public class Multimino {
 		}
 		
 	}
+	
+	public void removeBlock(Block block) {
+		blockCount--;
+		// Si le block en entrée est le dernier block du Multimino, on lui place la marque de la mort
+		if (blockCount == 0) {
+			markedDelete = true;
+			return;
+		}
+		for (List<Block> line : blocks) {
+			line.remove(block);}
+		}
 	
 	private void linkNeighbour() {
 		for (int i=0; i<4; i++) {
