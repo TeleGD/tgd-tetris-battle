@@ -32,12 +32,13 @@ public class Tetris {
 	private void deleteLine(int indexLine) {
 		List<Block> line = blocks.get(indexLine);
 		
+		// block.delete va supprimer la block du multimino auquel il est lié, puis sera alors supprimé par la ramasse miette
 		for(Block block : line) {
 			block.delete();
 		}
-		
 		blocks.remove(indexLine);
 		
+		// Puis on parcours les multiminos en supprimant ceux marqués par la marque de la mort
 		for(Multimino multimino : multiminos) {
 			if (multimino.getMarkedDeleted())
 				multiminos.remove(multimino);
