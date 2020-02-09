@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Multimino {
-	
+
 	private List<List<Block>> blocks;
-	
+	private int i; //étage du bloc en haut à gauche du multimino
+	private int j; //colonne du bloc en haut à gauche du multimino
+
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
 		ArrayList<Block> l2 = new ArrayList<Block>();
 		ArrayList<Block> l3 = new ArrayList<Block>();
 		ArrayList<Block> l4 = new ArrayList<Block>();
-		
+
 		switch(nameBlock) {
 			case "I":
 				this.blocks= new ArrayList<List<Block>>();
@@ -25,7 +27,7 @@ public class Multimino {
 				this.blocks.add(l3);
 				this.blocks.add(l4);
 				break;
-				
+
 			case "L":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -37,7 +39,7 @@ public class Multimino {
 				this.blocks.add(l3);
 				this.blocks.add(l4);
 				break;
-			
+
 			case "J":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -48,9 +50,9 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
-				
+
 				break;
-			
+
 			case "O":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -62,7 +64,7 @@ public class Multimino {
 				this.blocks.add(l3);
 				this.blocks.add(l4);
 				break;
-			
+
 			case "Z":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -74,7 +76,7 @@ public class Multimino {
 				this.blocks.add(l3);
 				this.blocks.add(l4);
 				break;
-			
+
 			case "S":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -86,7 +88,7 @@ public class Multimino {
 				this.blocks.add(l3);
 				this.blocks.add(l4);
 				break;
-			
+
 			case "T":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -99,7 +101,15 @@ public class Multimino {
 				this.blocks.add(l4);
 				break;
 		}
-		
+
+	}
+
+	public int getI() {
+		return this.i;
+	}
+
+	public int getJ() {
+		return this.j;
 	}
 
 }
