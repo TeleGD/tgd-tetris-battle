@@ -252,7 +252,7 @@ public class Multimino {
 			}
 		}
 	}
-}
+
 	public void render(GameContainer container, StateBasedGame game, Graphics context, float width, float height){
 		List<Block> blockLine = null;
 		for (int i = 0; i < blocks.size() ; i++){

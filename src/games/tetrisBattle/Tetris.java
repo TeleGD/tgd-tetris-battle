@@ -59,7 +59,7 @@ public class Tetris {
 		int j = multimino.getJ();
 		for (int k=0; k<4; k++) {
 			for (int l=0; l<4; l++) {
-				if (shape.get(k).get(l)!=NULL && (i-k<0 || i-k>19 || j+l<0 || j+l>9 || this.blocks.get(i-k).get(j+l)!=NULL)) {
+				if (shape.get(k).get(l)!= null && (i-k<0 || i-k>19 || j+l<0 || j+l>9 || this.blocks.get(i-k).get(j+l)!= null)) {
 					return false;
 				}
 			}
