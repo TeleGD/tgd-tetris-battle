@@ -31,22 +31,36 @@ public class Tetris {
 
 	private void deleteLine(int indexLine) {
 		List<Block> line = blocks.get(indexLine);
-		
+
 		// block.delete va supprimer la block du multimino auquel il est lié, puis sera alors supprimé par la ramasse miette
 		for(Block block : line) {
 			block.delete();
 		}
 		blocks.remove(indexLine);
-		
+
 		// Puis on parcours les multiminos en supprimant ceux marqués par la marque de la mort
 		for(Multimino multimino : multiminos) {
 			if (multimino.getMarkedDeleted())
 				multiminos.remove(multimino);
 		}
-		
+
 		//Rajout d'une ligne à la fin de la liste pour revenir à la grille 10x20
 		ArrayList<Block> newLine = new ArrayList<Block>(10);
 		blocks.add(newLine);
+	}
+
+	public boolean isPositionPossible(Multimino multimino) {
+		List<List<Block>> shape = multimino.getShape();
+		int i = multimino.getI();
+		int j = multimino.getJ();
+		for (int k=0; k<4; k++) {
+			for (int l=0; l<4; l++) {
+				if (shape.get(k).get(l)!=NULL && (i-k<0 || i-k>19 || j+l<0 || j+l>9 || this.blocks.get(i-k).get(j+l)!=NULL)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public List<List<Block>> getBlocks() {
