@@ -5,10 +5,7 @@ import java.util.List;
 
 public class Multimino {
 	
-
-	private int blockCount;
 	private List<List<Block>> blocks;
-	private Boolean markedDelete;
 	
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
@@ -27,6 +24,7 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
+				this.linkNeighbour();
 				break;
 				
 			case "L":
@@ -39,6 +37,7 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
+				this.linkNeighbour();
 				break;
 			
 			case "J":
@@ -51,7 +50,7 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
-				
+				this.linkNeighbour();
 				break;
 			
 			case "O":
@@ -64,6 +63,7 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
+				this.linkNeighbour();
 				break;
 			
 			case "Z":
@@ -76,6 +76,7 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
+				this.linkNeighbour();
 				break;
 			
 			case "S":
@@ -88,6 +89,7 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
+				this.linkNeighbour();
 				break;
 			
 			case "T":
@@ -100,26 +102,118 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
+				this.linkNeighbour();
 				break;
 		}
 		
 	}
 	
-	public void removeBlock(Block block) {
-		blockCount--;
-		// Si le block en entrée est le dernier block du Multimino, on lui place la marque de la mort
-		if (blockCount == 0) {
-			markedDelete = true;
-			return;
-		}
-		for (List<Block> line : blocks) {
-			line.remove(block);
-		}
-		
-	}
-	
-	public Boolean getMarkedDeleted() {
-		return markedDelete;
-	}
+	private void linkNeighbour() {
+		for (int i=0; i<4; i++) {
+			for(int j=0; j<4; j++) {
+				if(i==0) {
+					//cas de la plus haute ligne
+					if(j==0) {
+						//cas de la colonne la plus a gauche
+						if(this.blocks.get(i+1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
+						}
+						if(this.blocks.get(i).get(j+1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
+						}
+					}else if (j==3) {
+						//cas de la colonne la plus a droite
+						if(this.blocks.get(i+1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
+						}
+						if(this.blocks.get(i).get(j-1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
+						}
+					}else {
+						
+					}
+						if(this.blocks.get(i+1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
+						}
+						if(this.blocks.get(i).get(j-1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
+						}
+						if(this.blocks.get(i).get(j+1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
+						}
+							
+				}else if(i==3) {
+					//cas de la plus basse ligne
+					if(j==0) {
+						//cas de la colonne la plus a gauche
+						if(this.blocks.get(i-1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
+						}
+						if(this.blocks.get(i).get(j+1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
+						}
+					}else if (j==3) {
+						//cas de la colonne la plus a droite
+						if(this.blocks.get(i-1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i+1).get(j));
+						}
+						if(this.blocks.get(i).get(j-1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
+						}
+					}else {
+						if(this.blocks.get(i-1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
+						}
+						if(this.blocks.get(i).get(j-1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
+						}
+						if(this.blocks.get(i).get(j+1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
+						}
+							
+					}
+				}else {
+					if(j==0) {
+						//cas de la colonne la plus a gauche
+						if(this.blocks.get(i+1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
+						}
+						if(this.blocks.get(i-1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
+						}
+						if(this.blocks.get(i).get(j+1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
+						}
+					}else if (j==3) {
+						//cas de la colonne la plus a droite
+						if(this.blocks.get(i-1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i+1).get(j));
+						}
+						if(this.blocks.get(i).get(j-1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
+						}
+						if(this.blocks.get(i+1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
+						}
+					}else {
+						if(this.blocks.get(i-1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
+						}
+						if(this.blocks.get(i).get(j-1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
+						}
+						if(this.blocks.get(i).get(j+1) != null) {
+							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
+						}
+						if(this.blocks.get(i+1).get(j) != null) {
+							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
+						}
 
+				}
+				
+			}
+		}
+	}
+	}
 }
+
