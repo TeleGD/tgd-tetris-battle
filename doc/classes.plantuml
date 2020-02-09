@@ -10,41 +10,31 @@ class Player{
   int axisY
   int score
   int mana
-  List<Spell> spells
 }
 
 class Tetris {
+  List<Multimino> multiminos
+  List<List<Block>> blocks
+  List<Multimino> nextBlocks
+}
+
+class Multimino{
   List<Block> blocks
-  List<List<Square>> squares
-  List<Block> nextBlocks
+  void translate()
+  void rotate()
 }
 
 class Block{
-  List<Square> squares
+  Multimino multimino
+  List<Block> neighbors
 }
 
-class Square{
-  Block block
-  List<Square> neighbors
-}
 
-class SpellStore{
-  List<Spell>
-}
-
-abstract class Spell{
-  Player caster
-  Player target
-  int manaCost
-  void apply()
-}
-
-Block "1" -- "*" Square
+Multimino "1" -- "*" Block
+Tetris -- "*" Multimino
 Tetris -- "*" Block
-Tetris -- "*" Square
-Square -- "*" Square
+Block -- "*" Block
 World - "2" Player
 Player - "1" Tetris
-World -- "2" Spell
 
 @enduml

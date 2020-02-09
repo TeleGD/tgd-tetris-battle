@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Tetris {
 	
-	private List<Block> blocks;
-	private List<List<Square>> squares;
-	private List<Block> nextBlocks;
+	private List<Multimino> multiminos;
+	private List<List<Block>> squares;
+	private List<Multimino> nextMultiminos;
 	
 	public Tetris() {
 		
