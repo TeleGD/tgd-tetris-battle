@@ -55,13 +55,8 @@ public class Multimino {
 				this.blocks.add(l2);
 				this.blocks.add(l3);
 				this.blocks.add(l4);
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-
-=======
 				this.linkNeighbour();
->>>>>>> 1863b5de6119e7bcb29b8638f557aa1261aa7fb9
+
 				break;
 
 			case "O":
@@ -135,19 +130,10 @@ public class Multimino {
 			return;
 		}
 		for (List<Block> line : blocks) {
-			line.remove(block);}
+			line.remove(block);
 		}
-<<<<<<< HEAD
-
 	}
 
-||||||| merged common ancestors
-
-	}
-
-=======
-
->>>>>>> 1863b5de6119e7bcb29b8638f557aa1261aa7fb9
 	public Boolean getMarkedDeleted() {
 		return markedDelete;
 	}
@@ -252,11 +238,9 @@ public class Multimino {
 						if(this.blocks.get(i+1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
 						}
-
+					}
 				}
-
 			}
 		}
-	}
 	}
 }
