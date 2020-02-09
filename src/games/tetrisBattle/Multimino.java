@@ -141,6 +141,7 @@ public class Multimino {
 	public Boolean getMarkedDeleted() {
 		return markedDelete;
 	}
+	
 
 	private void linkNeighbour() {
 		for (int i=0; i<4; i++) {
