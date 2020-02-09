@@ -64,5 +64,15 @@ public class Tetris {
 		}
 		return count;
 	}
+	
+	public boolean isFilled(int indexLine) {
+		//Fonction qui renvoie true si l'un des blocks n'est pas null
+		List<Block> line = blocks.get(indexLine);
+		for (Block block : line) {
+			if (block != null)
+				return true;
+		}
+		return false;
+	}
 
 }

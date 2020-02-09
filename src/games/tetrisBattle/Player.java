@@ -16,7 +16,11 @@ public class Player {
 	}
 	
 	// Méthode à appeler à chaque fois qu'un bloc est posé
-	private void blocPose() {
+	private void afterBlockPlaced() {
+		if (tetris.isFilled(20)) {
+			// La il faut mettre le truv qui renvoie vers l'ecran de ses morts
+		}
+		
 		int numLines = tetris.completeLines();
 		switch(numLines) {
 		case 1 : score = score + 40;
