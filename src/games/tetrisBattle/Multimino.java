@@ -1,21 +1,30 @@
 package games.tetrisBattle;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Multimino {
+
 	private int blockCount;
 	private List<List<Block>> blocks;
+	private int i; //étage du bloc en haut à gauche du multimino
+	private int j; //colonne du bloc en haut à gauche du multimino
 	private Boolean markedDelete;
+
 	private String shapeName;
-	
+
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
 		ArrayList<Block> l2 = new ArrayList<Block>();
 		ArrayList<Block> l3 = new ArrayList<Block>();
 		ArrayList<Block> l4 = new ArrayList<Block>();
+
 		this.shapeName = nameBlock;
-		
+
 		switch(nameBlock) {
 			case "I":
 				this.blocks= new ArrayList<List<Block>>();
@@ -29,7 +38,7 @@ public class Multimino {
 				this.blocks.add(l4);
 				this.linkNeighbour();
 				break;
-				
+
 			case "L":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -42,7 +51,7 @@ public class Multimino {
 				this.blocks.add(l4);
 				this.linkNeighbour();
 				break;
-			
+
 			case "J":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -54,8 +63,9 @@ public class Multimino {
 				this.blocks.add(l3);
 				this.blocks.add(l4);
 				this.linkNeighbour();
+
 				break;
-			
+
 			case "O":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -68,7 +78,7 @@ public class Multimino {
 				this.blocks.add(l4);
 				this.linkNeighbour();
 				break;
-			
+
 			case "Z":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -81,7 +91,7 @@ public class Multimino {
 				this.blocks.add(l4);
 				this.linkNeighbour();
 				break;
-			
+
 			case "S":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -94,7 +104,7 @@ public class Multimino {
 				this.blocks.add(l4);
 				this.linkNeighbour();
 				break;
-			
+
 			case "T":
 				this.blocks= new ArrayList<List<Block>>();
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
@@ -108,9 +118,21 @@ public class Multimino {
 				this.linkNeighbour();
 				break;
 		}
-		
+
 	}
-	
+
+	public int getI() {
+		return this.i;
+	}
+
+	public List<List<Block>> getShape() {
+		return this.blocks;
+	}
+
+	public int getJ() {
+		return this.j;
+	}
+
 	public void removeBlock(Block block) {
 		blockCount--;
 		// Si le block en entrée est le dernier block du Multimino, on lui place la marque de la mort
@@ -119,13 +141,15 @@ public class Multimino {
 			return;
 		}
 		for (List<Block> line : blocks) {
-			line.remove(block);}
+			line.remove(block);
 		}
-	
+	}
+
 	public Boolean getMarkedDeleted() {
 		return markedDelete;
 	}
-	
+
+
 	private void linkNeighbour() {
 		for (int i=0; i<4; i++) {
 			for(int j=0; j<4; j++) {
@@ -148,7 +172,7 @@ public class Multimino {
 							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
 						}
 					}else {
-						
+
 					}
 						if(this.blocks.get(i+1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
@@ -159,7 +183,7 @@ public class Multimino {
 						if(this.blocks.get(i).get(j+1) != null) {
 							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
 						}
-							
+
 				}else if(i==3) {
 					//cas de la plus basse ligne
 					if(j==0) {
@@ -188,7 +212,7 @@ public class Multimino {
 						if(this.blocks.get(i).get(j+1) != null) {
 							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
 						}
-							
+
 					}
 				}else {
 					if(j==0) {
@@ -226,16 +250,31 @@ public class Multimino {
 						if(this.blocks.get(i+1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
 						}
-
+					}
 				}
-				
 			}
 		}
 	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics context, float width, float height){
+		List<Block> blockLine = null;
+		for (int i = 0; i < blocks.size() ; i++){
+			blockLine = blocks.get(i);
+			for(int j = 0 ; j < blockLine.size() ; j++){
+				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : adapter les x et y en fonction de la position de ce Multimino
+			}
+		}
 	}
+
+	public Multimino transform(int clockWise, int toBottom, int toRight) {
+		// TODO
+		return null;
+	}
+
 
 	public String getShapeName() {
 		return(shapeName);
 	}
 }
+
 
