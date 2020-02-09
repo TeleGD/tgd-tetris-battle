@@ -3,6 +3,7 @@ package games.tetrisBattle;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.lang.Math.*;
 
 public class Tetris {
 
@@ -17,6 +18,9 @@ public class Tetris {
 			ArrayList<Block> line = new ArrayList<Block>(10);
 			blocks.add(line);
 		}
+		this.nextMultiminos = new ArrayList<Multimino>();
+		for (int i=0; i<5; i++) {
+		this.nextMultiminos.add(generateMultimino());}
 	}
 
 	private boolean completeLine(int indexLine) {
@@ -53,4 +57,26 @@ public class Tetris {
 		return this.blocks;
 	}
 
+	public Multimino generateMultimino() {
+		double roll = Math.random();
+		String tempSt="";
+		if (roll<0.143) {
+			tempSt="I";
+		}else if (roll<0.286) {
+			tempSt="J";
+		}else if (roll<0.429) {
+			tempSt="L";
+		}else if (roll<0.571) {
+			tempSt="O";
+		}else if (roll<0.714) {
+			tempSt="S";
+		}else if (roll<0.857) {
+			tempSt="Z";
+		}else {
+			tempSt="T";
+		}
+		Multimino result = new Multimino(tempSt);
+		return result;
+	}
+	
 }

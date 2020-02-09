@@ -7,12 +7,14 @@ public class Multimino {
 	private int blockCount;
 	private List<List<Block>> blocks;
 	private Boolean markedDelete;
+	private String shapeName;
 	
 	public Multimino(String nameBlock) {
 		ArrayList<Block> l1 = new ArrayList<Block>();
 		ArrayList<Block> l2 = new ArrayList<Block>();
 		ArrayList<Block> l3 = new ArrayList<Block>();
 		ArrayList<Block> l4 = new ArrayList<Block>();
+		this.shapeName = nameBlock;
 		
 		switch(nameBlock) {
 			case "I":
@@ -230,6 +232,10 @@ public class Multimino {
 			}
 		}
 	}
+	}
+
+	public String getShapeName() {
+		return(shapeName);
 	}
 }
 
