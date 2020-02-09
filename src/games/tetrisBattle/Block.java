@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Block {
 	
-	private List<Square> squares;
+	private Multimino multimino;
+	private List<Block> neighbors;
 	
 	public Block() {
 		
