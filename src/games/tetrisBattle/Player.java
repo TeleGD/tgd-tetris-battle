@@ -49,6 +49,7 @@ public class Player {
 		this.toRight = 0;
 		this.minorSpell = false;
 		this.majorSpell = false;
+		this.tetris = new Tetris(20, 10);
 	}
 
 	public void poll(GameContainer container, StateBasedGame game, Input user) {
@@ -100,13 +101,13 @@ public class Player {
 		   // TODO: envoyer le sort majeur si possible
 		}
 	}
-	
+
 	// Méthode à appeler à chaque fois qu'un bloc est posé
 	private void afterBlockPlaced() {
-		if (tetris.isFilled(20)) {
+		if (tetris.isNotEmpty(this.tetris.getLI())) {
 			// La il faut mettre le truv qui renvoie vers l'ecran de ses morts
 		}
-		
+
 		int numLines = tetris.completeLines();
 		switch(numLines) {
 		case 1 : score = score + 40;

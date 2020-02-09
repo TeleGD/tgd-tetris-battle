@@ -13,18 +13,28 @@ public class Multimino {
 	private List<List<Block>> blocks;
 	private int i; //étage du bloc en haut à gauche du multimino
 	private int j; //colonne du bloc en haut à gauche du multimino
+	private int li; // hauteur du multimino
+	private int lj; // largeur du multimino
 	private Boolean markedDelete;
 
 	private Multimino(int i, int j, List<List<Block>> shape) {
+		assert 0 <= i;
+		assert 0 <= j;
 		this.i = i;
 		this.j = j;
+		this.li = shape.size();
+		this.lj = li != 0 ? shape.get(0).size() : 0;
 		this.blocks = shape;
 		this.linkNeighbour();
 	}
 
 	public Multimino(int i, int j, String nameBlock) {
+		assert 0 <= i;
+		assert 0 <= j;
 		this.i = i;
 		this.j = j;
+		this.li = 4;
+		this.lj = 4;
 		List<Block> l1 = new ArrayList<Block>();
 		List<Block> l2 = new ArrayList<Block>();
 		List<Block> l3 = new ArrayList<Block>();
@@ -93,12 +103,20 @@ public class Multimino {
 		return this.i;
 	}
 
-	public List<List<Block>> getShape() {
-		return this.blocks;
-	}
-
 	public int getJ() {
 		return this.j;
+	}
+
+	public int getLI() {
+		return this.li;
+	}
+
+	public int getLJ() {
+		return this.lj;
+	}
+
+	public List<List<Block>> getShape() {
+		return this.blocks;
 	}
 
 
@@ -120,8 +138,8 @@ public class Multimino {
 
 
 	private void linkNeighbour() {
-		for (int i=0; i<4; i++) {
-			for(int j=0; j<4; j++) {
+		for (int i = 0; i < this.li; ++i) {
+			for (int j = 0; j < this.lj; ++j) {
 				if(i==0) {
 					//cas de la plus haute ligne
 					if(j==0) {
@@ -132,7 +150,7 @@ public class Multimino {
 						if(this.blocks.get(i).get(j+1) != null) {
 							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
 						}
-					}else if (j==3) {
+					}else if (j==this.lj-1) {
 						//cas de la colonne la plus a droite
 						if(this.blocks.get(i+1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
@@ -141,8 +159,6 @@ public class Multimino {
 							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
 						}
 					}else {
-
-					}
 						if(this.blocks.get(i+1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
 						}
@@ -152,8 +168,9 @@ public class Multimino {
 						if(this.blocks.get(i).get(j+1) != null) {
 							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
 						}
+					}
 
-				}else if(i==3) {
+				}else if(i==this.li-1) {
 					//cas de la plus basse ligne
 					if(j==0) {
 						//cas de la colonne la plus a gauche
@@ -163,7 +180,7 @@ public class Multimino {
 						if(this.blocks.get(i).get(j+1) != null) {
 							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
 						}
-					}else if (j==3) {
+					}else if (j==this.lj-1) {
 						//cas de la colonne la plus a droite
 						if(this.blocks.get(i-1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i+1).get(j));
@@ -195,7 +212,7 @@ public class Multimino {
 						if(this.blocks.get(i).get(j+1) != null) {
 							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
 						}
-					}else if (j==3) {
+					}else if (j==this.lj-1) {
 						//cas de la colonne la plus a droite
 						if(this.blocks.get(i-1).get(j) != null) {
 							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i+1).get(j));
@@ -226,11 +243,10 @@ public class Multimino {
 	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
-		List<Block> blockLine = null;
-		for (int i = 0; i < blocks.size() ; i++){
-			blockLine = blocks.get(i);
-			for(int j = 0 ; j < blockLine.size() ; j++){
-				blockLine.get(j).render(container, game, context, xGrid + (this.j + j) * width, yGrid + (this.i + i) * height, width, height);
+		for (int i = 0; i < this.li; ++i) {
+			List<Block> line = blocks.get(i);
+			for (int j = 0; j < this.lj; ++j) {
+				line.get(j).render(container, game, context, xGrid + (this.j + j) * width, yGrid + (this.i + i) * height, width, height);
 			}
 		}
 	}
@@ -240,8 +256,8 @@ public class Multimino {
 		assert 0 <= toBottom && toBottom <= 1;
 		assert -1 <= toRight && toRight <= 1;
 		List<List<Block>> shape = new ArrayList<List<Block>>();
-		int lk = this.blocks.size();
-		int ll = lk != 0 ? this.blocks.get(0).size() : 0;
+		int lk = this.li;
+		int ll = this.lj;
 		int li = clockWise != 0 ? ll : lk;
 		int lj = clockWise != 0 ? lk : ll;
 		for (int i = 0; i < li; ++i) {
