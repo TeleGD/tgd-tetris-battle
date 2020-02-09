@@ -7,32 +7,32 @@ import java.util.List;
 public class Tetris {
 	
 	private List<Multimino> multiminos;
-	private List<List<Block>> squares;
+	private List<List<Block>> blocks;
 	private List<Multimino> nextMultiminos;
 	
 	public Tetris() {
-		this.squares = new LinkedList<List<Square>>();
+		this.blocks = new LinkedList<List<Block>>();
 		
 		for (int k = 1; k < 21; k++) {
-			ArrayList<Square> line = new ArrayList<Square>(10);
-			squares.add(line);
+			ArrayList<Block> line = new ArrayList<Block>(10);
+			blocks.add(line);
 		}
 	}
 	
 	private boolean completeLine(int indexLine) {
-		List<Square> line = squares.get(indexLine);
+		List<Block> line = blocks.get(indexLine);
 		for (int k = 0; k < 20; k++) {
-			Square square = line.get(k);
-			if (square == null)
+			Block block = line.get(k);
+			if (block == null)
 				return false;
 		}
 		return true;
 	}
 	
 	private void deleteLine(int indexLine) {
-		squares.remove(indexLine);
-		ArrayList<Square> line = new ArrayList<Square>(10);
-		squares.add(line);
+		blocks.remove(indexLine);
+		ArrayList<Block> line = new ArrayList<Block>(10);
+		blocks.add(line);
 	}
 	
 	
