@@ -122,6 +122,10 @@ public class Multimino {
 		return this.i;
 	}
 
+	public List<List<Block>> getShape() {
+		return this.blocks;
+	}
+	
 	public int getJ() {
 		return this.j;
 	}
