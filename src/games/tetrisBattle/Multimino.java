@@ -256,12 +256,12 @@ public class Multimino {
 		}
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, float width, float height){
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
 		List<Block> blockLine = null;
 		for (int i = 0; i < blocks.size() ; i++){
 			blockLine = blocks.get(i);
 			for(int j = 0 ; j < blockLine.size() ; j++){
-				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : adapter les x et y en fonction de la position de ce Multimino
+				blockLine.get(j).render(container, game, context, xGrid + (this.j + j) * width, yGrid + (this.i + i) * height, width, height);
 			}
 		}
 	}
