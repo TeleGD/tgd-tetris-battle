@@ -23,7 +23,7 @@ public class Tetris {
 		}
 	}
 
-	private boolean completeLine(int indexLine) {
+	private boolean completeCheck(int indexLine) {
 		List<Block> line = blocks.get(indexLine);
 		for (int k = 0; k < 20; k++) {
 			Block block = line.get(k);
@@ -55,6 +55,18 @@ public class Tetris {
 
 	public List<List<Block>> getBlocks() {
 		return this.blocks;
+	}
+	
+	public int completeLines() {
+		int count = 0;
+		// On commence la boucle par la fin de la liste, pour éviter de rater une ligne après une suppression
+		for (int k = 19; k >= 0; k--) {
+			if (completeCheck(k)) {
+				count++;
+				deleteLine(k);
+			}
+		}
+		return count;
 	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics context, int width, int height){
