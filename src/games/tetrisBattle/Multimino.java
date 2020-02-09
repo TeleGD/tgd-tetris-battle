@@ -12,7 +12,9 @@ public class Multimino {
 	private int j; //colonne du bloc en haut à gauche du multimino
 	private Boolean markedDelete;
 
-	public Multimino(String nameBlock) {
+	public Multimino(String nameBlock, int i, int j) {
+		this.i = i;
+		this.j = j;
 		ArrayList<Block> l1 = new ArrayList<Block>();
 		ArrayList<Block> l2 = new ArrayList<Block>();
 		ArrayList<Block> l3 = new ArrayList<Block>();
@@ -121,10 +123,11 @@ public class Multimino {
 	public List<List<Block>> getShape() {
 		return this.blocks;
 	}
-	
+
 	public int getJ() {
 		return this.j;
 	}
+
 
 	public void removeBlock(Block block) {
 		blockCount--;
@@ -141,7 +144,7 @@ public class Multimino {
 	public Boolean getMarkedDeleted() {
 		return markedDelete;
 	}
-	
+
 
 	private void linkNeighbour() {
 		for (int i=0; i<4; i++) {
