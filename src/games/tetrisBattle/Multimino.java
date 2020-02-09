@@ -15,105 +15,75 @@ public class Multimino {
 	private int j; //colonne du bloc en haut à gauche du multimino
 	private Boolean markedDelete;
 
-	public Multimino(String nameBlock) {
-		ArrayList<Block> l1 = new ArrayList<Block>();
-		ArrayList<Block> l2 = new ArrayList<Block>();
-		ArrayList<Block> l3 = new ArrayList<Block>();
-		ArrayList<Block> l4 = new ArrayList<Block>();
+	private Multimino(List<List<Block>> shape, int i, int j) {
+		this.blocks = shape;
+		this.linkNeighbour();
+		this.i = i;
+		this.j = j;
+	}
 
-		switch(nameBlock) {
-			case "I":
-				this.blocks= new ArrayList<List<Block>>();
+	public Multimino(String nameBlock) {
+		List<Block> l1 = new ArrayList<Block>();
+		List<Block> l2 = new ArrayList<Block>();
+		List<Block> l3 = new ArrayList<Block>();
+		List<Block> l4 = new ArrayList<Block>();
+		switch (nameBlock) {
+			case "I": {
 				l1.add(null);l1.add(new Block());l1.add(null);l1.add(null);
 				l2.add(null);l2.add(new Block());l2.add(null);l2.add(null);
 				l3.add(null);l3.add(new Block());l3.add(null);l3.add(null);
 				l4.add(null);l4.add(new Block());l4.add(null);l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
 				break;
-
-			case "L":
-				this.blocks= new ArrayList<List<Block>>();
+			}
+			case "L": {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(null);l2.add(new Block());l2.add(null);l2.add(null);
 				l3.add(null);l3.add(new Block());l3.add(null);l3.add(null);
 				l4.add(null);l4.add(new Block());l4.add(new Block());l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
 				break;
-
-			case "J":
-				this.blocks= new ArrayList<List<Block>>();
+			}
+			case "J": {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(null);l2.add(null);l2.add(new Block());l2.add(null);
 				l3.add(null);l3.add(null);l3.add(new Block());l3.add(null);
 				l4.add(null);l4.add(new Block());l4.add(new Block());l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
-
 				break;
-
-			case "O":
-				this.blocks= new ArrayList<List<Block>>();
+			}
+			case "O": {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(null);l2.add(new Block());l2.add(new Block());l2.add(null);
 				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
 				l4.add(null);l4.add(null);l4.add(null);l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
 				break;
-
-			case "Z":
-				this.blocks= new ArrayList<List<Block>>();
+			}
+			case "Z": {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(new Block());l2.add(new Block());l2.add(null);l2.add(null);
 				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
 				l4.add(null);l4.add(null);l4.add(null);l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
 				break;
-
-			case "S":
-				this.blocks= new ArrayList<List<Block>>();
+			}
+			case "S": {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(null);l2.add(null);l2.add(new Block());l2.add(new Block());
 				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
 				l4.add(null);l4.add(new Block());l4.add(null);l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
 				break;
-
-			case "T":
-				this.blocks= new ArrayList<List<Block>>();
+			}
+			case "T": {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(null);l2.add(new Block());l2.add(null);l2.add(null);
 				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
 				l4.add(null);l4.add(new Block());l4.add(null);l4.add(null);
-				this.blocks.add(l1);
-				this.blocks.add(l2);
-				this.blocks.add(l3);
-				this.blocks.add(l4);
-				this.linkNeighbour();
 				break;
+			}
 		}
+		this.blocks = new ArrayList<List<Block>>();
+		this.blocks.add(l1);
+		this.blocks.add(l2);
+		this.blocks.add(l3);
+		this.blocks.add(l4);
+		this.linkNeighbour();
 
 	}
 
@@ -263,8 +233,35 @@ public class Multimino {
 	}
 
 	public Multimino transform(int clockWise, int toBottom, int toRight) {
-		// TODO
-		return null;
+		assert -1 <= clockWise && clockWise <= 1;
+		assert 0 <= toBottom && toBottom <= 1;
+		assert -1 <= toRight && toRight <= 1;
+		List<List<Block>> shape = new ArrayList<List<Block>>();
+		int lk = this.blocks.size();
+		int ll = lk != 0 ? this.blocks.get(0).size() : 0;
+		int li = clockWise != 0 ? ll : lk;
+		int lj = clockWise != 0 ? lk : ll;
+		for (int i = 0; i < li; ++i) {
+			List<Block> line = new ArrayList<Block>();
+			for (int j = 0; j < lj; ++j) {
+				int k = i;
+				int l = j;
+				if (clockWise == -1) {
+					k = j;
+					l = ~i + ll;
+				} else if (clockWise == 1) {
+					k = ~j + lk;
+					l = i;
+				}
+				Block block = this.blocks.get(k).get(l);
+				line.add(block);
+			}
+			shape.add(line);
+		}
+		i = this.i + (lk - ll) / 2 + toBottom;
+		j = this.j + (ll - lj) / 2 + toRight;
+		Multimino multimino = new Multimino(shape, i, j);
+		return multimino;
 	}
 
 }
