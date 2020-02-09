@@ -7,6 +7,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.lang.Math.*;
 
 public class Tetris {
 
@@ -23,6 +24,9 @@ public class Tetris {
 			ArrayList<Block> line = new ArrayList<Block>(10);
 			blocks.add(line);
 		}
+		this.nextMultiminos = new ArrayList<Multimino>();
+		for (int i=0; i<5; i++) {
+		this.nextMultiminos.add(generateMultimino());}
 	}
 
 	private boolean completeCheck(int indexLine) {
@@ -73,6 +77,30 @@ public class Tetris {
 		return this.blocks;
 	}
 
+
+	public Multimino generateMultimino() {
+		double roll = Math.random();
+		String tempSt="";
+		if (roll<0.143) {
+			tempSt="I";
+		}else if (roll<0.286) {
+			tempSt="J";
+		}else if (roll<0.429) {
+			tempSt="L";
+		}else if (roll<0.571) {
+			tempSt="O";
+		}else if (roll<0.714) {
+			tempSt="S";
+		}else if (roll<0.857) {
+			tempSt="Z";
+		}else {
+			tempSt="T";
+		}
+		Multimino result = new Multimino(0, 0, tempSt); // TODO: changer les coordonnées
+		return result;
+	}
+
+
 	public int completeLines() {
 		int count = 0;
 		// On commence la boucle par la fin de la liste, pour éviter de rater une ligne après une suppression
@@ -85,14 +113,26 @@ public class Tetris {
 		return count;
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, int width, int height){
+	public boolean isFilled(int indexLine) {
+		//Fonction qui renvoie true si l'un des blocks n'est pas null
+		List<Block> line = blocks.get(indexLine);
+		for (Block block : line) {
+			if (block != null)
+				return true;
+		}
+		return false;
+	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
 		List<Block> blockLine = null;
 		for (int i = 0; i < blocks.size() ; i++){   // Affichage des blocks fixes
 			blockLine = blocks.get(i);
 			for(int j = 0 ; j < blockLine.size() ; j++){
-				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : Adapter x et y en fonction de la position de ce Tetris et adapter son width et height
+				blockLine.get(j).render(container, game, context, xGrid + j * width, yGrid + i * height, width, height);    //TODO : Adapter x et y en fonction de la position de ce Tetris et adapter son width et height
 			}
 		}
+
+		currentMultimino.render(container, game, context, xGrid, yGrid, width, height); // Affichage du Multimino qui est en train d'être placé
 	}
 
 	public void setCurrentMultimino(Multimino multimino) {
@@ -102,5 +142,6 @@ public class Tetris {
 	public Multimino getCurrentMultimino() {
 		return this.currentMultimino;
 	}
+
 
 }

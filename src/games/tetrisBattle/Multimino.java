@@ -15,14 +15,16 @@ public class Multimino {
 	private int j; //colonne du bloc en haut à gauche du multimino
 	private Boolean markedDelete;
 
-	private Multimino(List<List<Block>> shape, int i, int j) {
-		this.blocks = shape;
-		this.linkNeighbour();
+	private Multimino(int i, int j, List<List<Block>> shape) {
 		this.i = i;
 		this.j = j;
+		this.blocks = shape;
+		this.linkNeighbour();
 	}
 
-	public Multimino(String nameBlock) {
+	public Multimino(int i, int j, String nameBlock) {
+		this.i = i;
+		this.j = j;
 		List<Block> l1 = new ArrayList<Block>();
 		List<Block> l2 = new ArrayList<Block>();
 		List<Block> l3 = new ArrayList<Block>();
@@ -98,6 +100,7 @@ public class Multimino {
 	public int getJ() {
 		return this.j;
 	}
+
 
 	public void removeBlock(Block block) {
 		blockCount--;
@@ -222,12 +225,12 @@ public class Multimino {
 		}
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, float width, float height){
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
 		List<Block> blockLine = null;
 		for (int i = 0; i < blocks.size() ; i++){
 			blockLine = blocks.get(i);
 			for(int j = 0 ; j < blockLine.size() ; j++){
-				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : adapter les x et y en fonction de la position de ce Multimino
+				blockLine.get(j).render(container, game, context, xGrid + (this.j + j) * width, yGrid + (this.i + i) * height, width, height);
 			}
 		}
 	}
@@ -260,7 +263,7 @@ public class Multimino {
 		}
 		i = this.i + (lk - ll) / 2 + toBottom;
 		j = this.j + (ll - lj) / 2 + toRight;
-		Multimino multimino = new Multimino(shape, i, j);
+		Multimino multimino = new Multimino(i, j, shape);
 		return multimino;
 	}
 
