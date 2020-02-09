@@ -1,10 +1,13 @@
 package games.tetrisBattle;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Multimino {
-
 
 	private int blockCount;
 	private List<List<Block>> blocks;
@@ -19,6 +22,8 @@ public class Multimino {
 		ArrayList<Block> l2 = new ArrayList<Block>();
 		ArrayList<Block> l3 = new ArrayList<Block>();
 		ArrayList<Block> l4 = new ArrayList<Block>();
+
+		this.shapeName = nameBlock;
 
 		switch(nameBlock) {
 			case "I":
@@ -250,5 +255,25 @@ public class Multimino {
 				}
 			}
 		}
+	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
+		List<Block> blockLine = null;
+		for (int i = 0; i < blocks.size() ; i++){
+			blockLine = blocks.get(i);
+			for(int j = 0 ; j < blockLine.size() ; j++){
+				blockLine.get(j).render(container, game, context, xGrid + (this.j + j) * width, yGrid + (this.i + i) * height, width, height);
+			}
+		}
+	}
+
+	public Multimino transform(int clockWise, int toBottom, int toRight) {
+		// TODO
+		return null;
+	}
+
+
+	public String getShapeName() {
+		return(shapeName);
 	}
 }
