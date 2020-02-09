@@ -30,11 +30,18 @@ public class Tetris {
 	}
 	
 	private void deleteLine(int indexLine) {
+		List<Block> line = blocks.get(indexLine);
+		
+		for(Block block : line) {
+			block.
+		}
+		
 		blocks.remove(indexLine);
+		//Rajout d'une ligne à la fin de la liste pour revenir à la grille 10x20
 		ArrayList<Block> line = new ArrayList<Block>(10);
 		blocks.add(line);
 	}
 	
-	
+	private void 
 
 }

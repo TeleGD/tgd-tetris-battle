@@ -10,5 +10,13 @@ public class Block {
 	public Block() {
 		
 	}
+	
+	public void getMultimino() {
+		
+	}
+	
+	public void delete() {
+		
+	}
 
 }
