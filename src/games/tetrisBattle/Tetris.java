@@ -85,14 +85,16 @@ public class Tetris {
 		return count;
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, int width, int height){
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
 		List<Block> blockLine = null;
 		for (int i = 0; i < blocks.size() ; i++){   // Affichage des blocks fixes
 			blockLine = blocks.get(i);
 			for(int j = 0 ; j < blockLine.size() ; j++){
-				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : Adapter x et y en fonction de la position de ce Tetris et adapter son width et height
+				blockLine.get(j).render(container, game, context, xGrid + j * width, yGrid + i * height, width, height);    //TODO : Adapter x et y en fonction de la position de ce Tetris et adapter son width et height
 			}
 		}
+
+		currentMultimino.render(container, game, context, xGrid, yGrid, width, height); // Affichage du Multimino qui est en train d'être placé
 	}
 
 	public void setCurrentMultimino(Multimino multimino) {
