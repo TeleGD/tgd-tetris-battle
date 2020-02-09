@@ -1,5 +1,9 @@
 package games.tetrisBattle;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,5 +56,16 @@ public class Tetris {
 	public List<List<Block>> getBlocks() {
 		return this.blocks;
 	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int width, int height){
+		List<Block> blockLine = null;
+		for (int i = 0; i < blocks.size() ; i++){   // Affichage des blocks fixes
+			blockLine = blocks.get(i);
+			for(int j = 0 ; j < blockLine.size() ; j++){
+				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : Adapter x et y en fonction de la position de ce Tetris et adapter son width et height
+			}
+		}
+	}
+
 
 }

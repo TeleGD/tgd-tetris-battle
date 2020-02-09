@@ -1,5 +1,9 @@
 package games.tetrisBattle;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,4 +126,14 @@ public class Multimino {
 		return markedDelete;
 	}
 
-}
+	public void render(GameContainer container, StateBasedGame game, Graphics context, float width, float height){
+		List<Block> blockLine = null;
+		for (int i = 0; i < blocks.size() ; i++){
+			blockLine = blocks.get(i);
+			for(int j = 0 ; j < blockLine.size() ; j++){
+				blockLine.get(j).render(container, game, context, j * width, i * height, width, height);    //TODO : adapter les x et y en fonction de la position de ce Multimino
+			}
+		}
+	}
+
+	}
