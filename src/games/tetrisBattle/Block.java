@@ -11,12 +11,9 @@ public class Block {
 		
 	}
 	
-	public void getMultimino() {
-		
-	}
 	
 	public void delete() {
-		
+		multimino.removeBlock(this);
 	}
 
 }
