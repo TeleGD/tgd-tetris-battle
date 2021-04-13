@@ -30,6 +30,7 @@ public abstract class AppWorld extends AppState {
 	@Override
 	public final void enter(GameContainer container, StateBasedGame game) {
 		AppInput appInput = (AppInput) container.getInput();
+		appInput.clearKeyPressedRecord();
 		appInput.clearControlPressedRecord();
 		if (this.state == 0) {
 			this.play(container, game);
@@ -55,10 +56,18 @@ public abstract class AppWorld extends AppState {
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		AppInput appInput = (AppInput) container.getInput();
 		AppGame appGame = (AppGame) game;
-		if (appInput.isButtonPressed(AppInput.BUTTON_START)) {
-			this.state = 1;
-			appGame.enterState(AppGame.PAGES_PAUSE, new FadeOutTransition(), new FadeInTransition());
+		AppPlayer gameMaster = appGame.appPlayers.get(0);
+		int gameMasterID = gameMaster.getControllerID();
+		boolean BUTTON_PLUS = appInput.isKeyDown(AppInput.KEY_ESCAPE) || appInput.isButtonPressed(AppInput.BUTTON_PLUS, gameMasterID);
+		int gameMasterRecord = gameMaster.getButtonPressedRecord();
+		if (BUTTON_PLUS == ((gameMasterRecord & AppInput.BUTTON_PLUS) == 0)) {
+			gameMasterRecord ^= AppInput.BUTTON_PLUS;
+			if (BUTTON_PLUS) {
+				this.state = 1;
+				appGame.enterState(AppGame.PAGES_PAUSE, new FadeOutTransition(), new FadeInTransition());
+			}
 		}
+		gameMaster.setButtonPressedRecord(gameMasterRecord);
 	}
 
 	@Override

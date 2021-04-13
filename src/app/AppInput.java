@@ -8,32 +8,30 @@ public class AppInput extends Input {
 	public static final int BUTTON_B = 2;
 	public static final int BUTTON_X = 4;
 	public static final int BUTTON_Y = 8;
-	public static final int DPAD_DOWN = 16;
-	public static final int DPAD_RIGHT = 32;
-	public static final int DPAD_LEFT = 64;
-	public static final int DPAD_UP = 128;
-	public static final int BUTTON_START = 256;
-	public static final int BUTTON_SELECT = 512;
+	public static final int BUTTON_L = 16;
+	public static final int BUTTON_R = 32;
+	public static final int BUTTON_ZL = 64;
+	public static final int BUTTON_ZR = 128;
+	public static final int BUTTON_MINUS = 256;
+	public static final int BUTTON_PLUS = 512;
+	public static final int BUTTON_SL = 1024;
+	public static final int BUTTON_SR = 2048;
+	public static final int BUTTON_UP = 4096;
+	public static final int BUTTON_DOWN = 8192;
+	public static final int BUTTON_LEFT = 16384;
+	public static final int BUTTON_RIGHT = 32768;
+	public static final int AXIS_XL = 0;
+	public static final int AXIS_YL = 1;
+	public static final int AXIS_XR = 2;
+	public static final int AXIS_YR = 3;
 
-	public static int AXIS_XL = 1;
-	public static int AXIS_YL = 2;
-	public static int AXIS_XR = 4;
-	public static int AXIS_YR = 5;
+	private static final int BUTTON_COUNT = 16;
+	private static final int AXIS_COUNT = 4;
 
-	private static final int BUTTON_COUNT = 10; //seulement 4 boutons utilisés sur la manette : ABXY
-	private static final int AXIS_COUNT = 6; //meme si il n't a que 4 axes utiles, il faut lire jusqu'au 6eme sur Linux
-
-	//les boutons sont stockés sous un entier afin de récupérer les plusieurs inputs en un seul appel
-	private int buttonsPressed; //les boutons enfoncés
-	private int buttonsDown; //les boutons qui viennent d'être enfoncés
-	private int buttonsUp; //les boutons qui viennent d'être relachés
-
-	private float[] rawAxes;
-	private float[] axes;
-	private float deadZone = 0.1f; //seuil minimale du joystick
-
-	private int[] keyboardButtons;
-	private int[] keyboardAxes;
+	private boolean pollFlag;
+	private int[] controls;
+	private int[] controllerPressed;
+	private int[] controllerMoved;
 
 	private float scale;
 	private float offsetX;
@@ -46,208 +44,16 @@ public class AppInput extends Input {
 
 	public AppInput(int height) {
 		super(height);
+		this.pollFlag = false;
+		int controllerCount = this.getControllerCount();
+		this.controls = new int[controllerCount];
+		this.controllerPressed = new int[controllerCount];
+		this.controllerMoved = new int[controllerCount];
 		this.scaleX = 1;
 		this.scaleY = 1;
 		this.xoffset = 0;
 		this.yoffset = 0;
-
-		this.buttonsPressed = 0;
-		this.buttonsDown = 0;
-		this.buttonsUp = 0;
-		this.rawAxes = new float[AXIS_COUNT];
-		this.axes = new float[AXIS_COUNT];
-
-		//Liste des boutons manette activés au clavier
-		keyboardButtons = new int[] {
-			KEY_SPACE, //A
-			KEY_B, //B
-			KEY_C, //X
-			KEY_V, //Y
-			KEY_G, //DPAD DOWN
-			KEY_H, //DPAD RIGHT
-			KEY_F, //DPAD LEFT
-			KEY_T, //DPAD UP
-			KEY_RETURN, //START
-			KEY_BACK //SELECT
-		};
-		
-		//Simulation des axes au clavier
-		keyboardAxes = new int[]{
-			KEY_D, //XL+
-			KEY_Q, //XL-
-			KEY_S, //YL+
-			KEY_Z, //YL-
-			KEY_RIGHT, //XR+
-			KEY_LEFT, //XR-
-			KEY_DOWN, //YR+
-			KEY_UP //YR-
-		};
-
-		//corrige les axes sur windows
-		if(System.getProperty("os.name").toLowerCase().contains("windows")) {
-			AXIS_XL = 1;
-			AXIS_YL = 0;
-			AXIS_XR = 3;
-			AXIS_YR = 2;
-		}
 	}
-
-	//############
-	//  GAMEPAD  #
-	//############
-
-	//mise a jour des inputs
-	@Override
-	public void poll(int width, int height) {
-		super.poll(width, height);
-		int lastButtonsState = buttonsPressed;
-		this.buttonsDown = 0;
-		this.buttonsUp = 0;
-
-		//détecte la manette parmis tout les controlleurs
-		int gamepadIndex = -1;
-		for(int i = 0; i < super.getControllerCount(); i++) {
-			if(super.getAxisCount(i) > 2)
-				gamepadIndex = i;
-		}
-		//si gamepadIndex reste égal à -1, il n'y a pas de manette branchée
-
-		//lecture des boutons manette ABXY
-		buttonsPressed = 0;
-		if(gamepadIndex != -1) {
-			for (int i = 0; i < 4; i++) {
-				try {
-					if (super.isButtonPressed (i, gamepadIndex))
-						buttonsPressed |= 1 << i;
-				} catch (IndexOutOfBoundsException exception) {}
-			}
-		}
-
-		//permet d'actioner les boutons manette depuis le clavier
-		for(int i = 0; i < keyboardButtons.length; i++) {
-			if(super.isKeyDown(keyboardButtons[i]))
-				buttonsPressed |= 1 << i;
-		}
-
-		for(int i = 0; i < BUTTON_COUNT; i++) {
-			if((buttonsPressed >> i & 1) == 1 && (lastButtonsState >> i & 1) == 0)
-				buttonsDown |= 1 << i;
-			if((buttonsPressed >> i & 1) == 0 && (lastButtonsState >> i & 1) == 1)
-				buttonsUp|= 1 << i;
-		}
-
-		//lecture des axes sur la manette
-		for (int i = 0; i < AXIS_COUNT; i++) {
-			rawAxes[i] = 0;
-			if (gamepadIndex != -1 && i < super.getAxisCount(gamepadIndex))
-				rawAxes[i] = super.getAxisValue(gamepadIndex, i);
-		}
-
-		//simulation des axes au clavier
-		updateKeyboardAxis(AXIS_XL, keyboardAxes[0], keyboardAxes[1]);
-		updateKeyboardAxis(AXIS_YL, keyboardAxes[2], keyboardAxes[3]);
-		updateKeyboardAxis(AXIS_XR, keyboardAxes[4], keyboardAxes[5]);
-		updateKeyboardAxis(AXIS_YR, keyboardAxes[6], keyboardAxes[7]);
-
-		fixAxes(AXIS_XL, AXIS_YL);
-		fixAxes(AXIS_XR, AXIS_YR);
-
-		//lissage des axes et zone morte
-		for(int i = 0; i < AXIS_COUNT; i++) {
-			axes[i] = (axes[i] + rawAxes[i]) / 2.0f;
-			if(Math.abs(axes[i]) < deadZone)
-				axes[i] = 0;
-		}
-	}
-
-	private void updateKeyboardAxis(int axis, int posKey, int negKey) {
-		int posVal = super.isKeyDown(posKey) ? 1 : 0;
-		int negVal = super.isKeyDown(negKey) ? -1 : 0;
-		if(Math.abs(rawAxes[axis]) < deadZone) //si le stick de la manette est dans la zone morte
-			rawAxes[axis] = posVal + negVal;
-	}
-
-	//corrige les axes pour ne pas sortir du cercle
-	private void fixAxes(int xAxis, int yAxis) {
-		double dist = Math.sqrt(rawAxes[xAxis] * rawAxes[xAxis] + rawAxes[yAxis] * rawAxes[yAxis]);
-		if(dist > 1) {
-			double angle = Math.atan2(rawAxes[xAxis], rawAxes[yAxis]);
-			rawAxes[xAxis] = (float)Math.sin(angle);
-			rawAxes[yAxis] = (float)Math.cos(angle);
-		}
-		rawAxes[xAxis] = Math.abs(rawAxes[xAxis]) > 0.95 ? Math.signum(rawAxes[xAxis]) : rawAxes[xAxis];
-		rawAxes[yAxis] = Math.abs(rawAxes[yAxis]) > 0.95 ? Math.signum(rawAxes[yAxis]) : rawAxes[yAxis];
-	}
-
-	//verifie si un des boutons demandé est maintenu
-	//il est possible de demander plusieurs boutons en meme temps avec un OR bit à bit sur les membres statiques
-	public boolean isButtonPressed(int buttons) {
-		for (int i = 0; i < BUTTON_COUNT; i++) {
-			if ((buttons >> i & 1) == 1 && (buttonsPressed >> i & 1) == 1)
-				return true;
-		}
-		return false;
-	}
-
-	//verifie si le bouton vient d'être pressé à cette frame
-	public boolean isButtonDown(int buttons) {
-		for (int i = 0; i < BUTTON_COUNT; i++) {
-			if ((buttons >> i & 1) == 1 && (buttonsDown >> i & 1) == 1)
-				return true;
-		}
-		return false;
-	}
-
-	//verifie si le bouton vient d'être relaché à cette frame
-	public boolean isButtonUp(int buttons) {
-		for (int i = 0; i < BUTTON_COUNT; i++) {
-			if ((buttons >> i & 1) == 1 && (buttonsUp >> i & 1) == 1)
-				return true;
-		}
-		return false;
-	}
-
-	//permet d'accéder à l'axe demandé (il faut utiliser les membres statiques)
-	public float getAxisValue(int axis) {
-		return axes[axis];
-	}
-
-	//verifie si l'axe est vraiment positif
-	public boolean isAxisPos(int axis) {
-		return axes[axis] > 0.7;
-	}
-
-	//verifie si l'axe est vraiment negatif
-	public boolean isAxisNeg(int axis) {
-		return axes[axis] < -0.7;
-	}
-
-	public void setDeadZone(float newVal) {
-		this.deadZone = newVal;
-	}
-
-	//##############
-	//  OVERRIDES  #
-	//##############
-
-	@Override
-	public float getAxisValue(int axis, int controller) {
-		return getAxisValue(axis);
-	}
-
-	@Override
-	public boolean isButtonPressed(int buttons, int controller) {
-		return isButtonPressed(buttons);
-	}
-
-	//TODO : refaire les menus pour pouvoir supprimer cette fonction
-	public int getButtonCount(int id) {
-		return BUTTON_COUNT;
-	}
-
-	//####################
-	//  SOURIS ET ECRAN  #
-	//####################
 
 	void setCanvasClip(float scale, float offsetX, float offsetY) {
 		this.scale = scale;
@@ -305,4 +111,221 @@ public class AppInput extends Input {
 		super.setOffset(xoffset, yoffset);
 		super.setScale(scaleX, scaleY);
 	}
+
+	@Override
+	public void poll(int width, int height) {
+		this.pollFlag = true;
+		super.poll(width, height);
+		for (int i = 0, l = this.getControllerCount(); i < l; i++) {
+			try {
+				float value = super.getAxisValue(i, 4);
+				if (((this.controllerMoved[i] & 16) == 0)) {
+					if (value == -1f) {
+						value = 0f;
+					} else {
+						this.controllerMoved[i] |= 16;
+					}
+				}
+				if (((this.controls[i] & 1) == 0) == value > .5f) {
+					this.controls[i] ^= 1;
+					if ((this.controls[i] & 1) != 0) {
+						this.controllerPressed[i] |= 1;
+					}
+				}
+				if (((this.controls[i] & 2) == 0) == value < -.5f) {
+					this.controls[i] ^= 2;
+					if ((this.controls[i] & 2) != 0) {
+						this.controllerPressed[i] |= 2;
+					}
+				}
+			} catch (IndexOutOfBoundsException exception) {}
+		}
+		this.pollFlag = false;
+	}
+
+	@Override
+	public boolean isControllerUp(int controller) {
+		return super.isControllerUp(controller) && !super.isControllerDown(controller);
+	}
+
+	@Override
+	public boolean isControllerDown(int controller) {
+		return super.isControllerDown(controller) && !super.isControllerUp(controller);
+	}
+
+	@Override
+	public boolean isControllerLeft(int controller) {
+		return super.isControllerLeft(controller) && !super.isControllerRight(controller);
+	}
+
+	@Override
+	public boolean isControllerRight(int controller) {
+		return super.isControllerRight(controller) && !super.isControllerLeft(controller);
+	}
+
+	@Override
+	public boolean isButtonPressed(int buttons, int controller) {
+		if (this.pollFlag) {
+			try {
+				if (super.isButtonPressed(buttons, controller)) {
+					return true;
+				}
+			} catch (ArrayIndexOutOfBoundsException exception) {}
+			return false;
+		}
+		for (int i = 0, j = 0, l = AppInput.BUTTON_COUNT; i < l; i++, j++) {
+			if (i == 6) {
+				try {
+					if ((buttons & 1) != 0) {
+						float value = super.getAxisValue(controller, 4);
+						if (((this.controllerMoved[controller] & 16) == 0)) {
+							if (value == -1f) {
+								value = 0f;
+							} else {
+								this.controllerMoved[controller] |= 16;
+							}
+						}
+						if (value > .5f) {
+							return true;
+						}
+					}
+				} catch (IndexOutOfBoundsException exception) {}
+				j--;
+			} else if (i == 7) {
+				try {
+					if ((buttons & 1) != 0) {
+						float value = super.getAxisValue(controller, 4);
+						if (((this.controllerMoved[controller] & 16) == 0)) {
+							if (value == -1f) {
+								value = 0f;
+							} else {
+								this.controllerMoved[controller] |= 16;
+							}
+						}
+						if (value < -.5f) {
+							return true;
+						}
+					}
+				} catch (IndexOutOfBoundsException exception) {}
+				j--;
+			} else if ((buttons & 1) != 0) {
+				switch (i) {
+					case 12:
+						if (this.isControllerUp(controller)) {
+							return true;
+						}
+						break;
+					case 13:
+						if (this.isControllerDown(controller)) {
+							return true;
+						}
+						break;
+					case 14:
+						if (this.isControllerLeft(controller)) {
+							return true;
+						}
+						break;
+					case 15:
+						if (this.isControllerRight(controller)) {
+							return true;
+						}
+						break;
+					default:
+						try {
+							if (super.isButtonPressed(j, controller)) {
+								return true;
+							}
+						} catch (IndexOutOfBoundsException exception) {}
+				}
+			}
+			buttons >>>= 1;
+		}
+		return false;
+	}
+
+	// public boolean areButtonsPressed(int buttons, int controller) {}
+
+	public int getButtonCount(int controller) {
+		return AppInput.BUTTON_COUNT;
+	}
+
+	@Override
+	public boolean isControlPressed(int buttons, int controller) {
+		for (int i = 0, j = 0, l = AppInput.BUTTON_COUNT; i < l; i++, j++) {
+			if (i == 6 || i == 7) {
+				if ((buttons & 1) != 0 && (controllerPressed[controller] & (1 << (i - 6))) != 0) {
+					controllerPressed[controller] ^= 1 << (i - 6);
+					return true;
+				}
+				j--;
+			} else if ((buttons & 1) != 0) {
+				switch (i) {
+					case 12:
+					case 13:
+					case 14:
+					case 15:
+						try {
+							if (super.isControlPressed((j - 8) % 4, controller)) {
+								return true;
+							}
+						} catch (IndexOutOfBoundsException exception) {}
+						break;
+					default:
+						try {
+							if (super.isControlPressed(j + 4, controller)) {
+								return true;
+							}
+						} catch (IndexOutOfBoundsException exception) {}
+				}
+			}
+			buttons >>>= 1;
+		}
+		return false;
+	}
+
+	// public boolean areControlsPressed(int buttons, int controller) {}
+
+	public int getControlCount(int controller) {
+		return AppInput.BUTTON_COUNT;
+	}
+
+	@Override
+	public String getAxisName(int axis, int controller) {
+		try {
+			if (axis < AppInput.AXIS_COUNT) {
+				return super.getAxisName(controller, axis ^ 1);
+			}
+		} catch (IndexOutOfBoundsException exception) {}
+		return "";
+	}
+
+	@Override
+	public float getAxisValue(int axis, int controller) {
+		try {
+			if (axis < AppInput.AXIS_COUNT) {
+				float value = super.getAxisValue(controller, axis ^ 1);
+				if ((this.controllerMoved[controller] & (1 << axis)) != 0) {
+					return value;
+				} else if (value != -1f) {
+					this.controllerMoved[controller] |= 1 << axis;
+					return value;
+				}
+			}
+		} catch (IndexOutOfBoundsException exception) {}
+		return 0f;
+	}
+
+	@Override
+	public int getAxisCount(int controller) {
+		return AppInput.AXIS_COUNT;
+	}
+
+	@Override
+	public void clearControlPressedRecord() {
+		super.clearControlPressedRecord();
+		for (int i = 0, l = this.getControllerCount(); i < l; i++) {
+			this.controllerPressed[i] = 0;
+		}
+	}
+
 }

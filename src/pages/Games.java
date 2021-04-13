@@ -1,18 +1,19 @@
 package pages;
 
-import app.AppGame;
-import app.AppMenu;
-import app.elements.MenuItem;
+import java.util.Arrays;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
-import java.util.Arrays;
+import app.AppGame;
+import app.AppMenu;
+import app.elements.MenuItem;
 
-public class Menu extends AppMenu {
+public class Games extends AppMenu {
 
-	public Menu(int ID) {
+	public Games(int ID) {
 		super(ID);
 	}
 
@@ -25,20 +26,26 @@ public class Menu extends AppMenu {
 		this.setMenu(Arrays.asList(new MenuItem[] {
 			new MenuItem(AppGame.TITLES[AppGame.GAMES_TETRIS_BATTLE_WORLD]) {
 				public void itemSelected() {
+					Players players = (Players) game.getState(AppGame.PAGES_PLAYERS);
 					Pause pause = (Pause) game.getState(AppGame.PAGES_PAUSE);
+					players.setPreviousID(AppGame.PAGES_GAMES);
+					players.setNextID(AppGame.GAMES_TETRIS_BATTLE_WORLD);
 					pause.setPreviousID(AppGame.GAMES_TETRIS_BATTLE_WORLD);
-					pause.setNextID(AppGame.PAGES_MENU);
-					game.enterState(AppGame.GAMES_TETRIS_BATTLE_WORLD);
+					pause.setNextID(AppGame.PAGES_GAMES);
+					game.enterState(AppGame.PAGES_PLAYERS);
 				}
 			},
 			new MenuItem("Retour") {
 				public void itemSelected() {
 					AppGame appGame = (AppGame) game;
+					for (int i = appGame.appPlayers.size() - 1; i >= 0; i--) {
+						appGame.availableColorIDs.add(0, appGame.appPlayers.remove(i).getColorID());
+					}
 					appGame.enterState(AppGame.PAGES_WELCOME, new FadeOutTransition(), new FadeInTransition());
 				}
 			}
 		}));
-		this.setHint("SELECT AN OPTION");
+		this.setHint("SELECT A GAME");
 	}
 
 }
