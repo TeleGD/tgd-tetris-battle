@@ -1,14 +1,15 @@
 package pages;
 
-import app.AppMenu;
-import app.AppWorld;
-import app.elements.MenuItem;
+import java.util.Arrays;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
-import java.util.Arrays;
+import app.AppMenu;
+import app.AppWorld;
+import app.elements.MenuItem;
 
 public class Pause extends AppMenu {
 
@@ -24,7 +25,7 @@ public class Pause extends AppMenu {
 		super.initSize(container, game, 600, 400);
 		super.init(container, game);
 		this.setTitle("Pause");
-		this.setSubtitle("Le temps de prendre un gouter");
+		this.setSubtitle("Le temps de prendre un goûter");
 		this.setMenu(Arrays.asList(new MenuItem[] {
 			new MenuItem("Retour") {
 				public void itemSelected() {

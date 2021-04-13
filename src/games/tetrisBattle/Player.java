@@ -2,16 +2,23 @@ package games.tetrisBattle;
 
 import java.util.List;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.state.StateBasedGame;
 
 import app.AppInput;
+import app.AppPlayer;
 
 import games.tetrisBattle.Multimino;
 
 public class Player {
 
+	private Color fillColor;
+	private Color strokeColor;
+	private int controllerID;
+	private String name;
 	private int rotateAntiClockWise;
 	private int rotateClockWise;
 	private int applyMajorSpell;
@@ -28,22 +35,20 @@ public class Player {
 	private boolean minorSpell;
 	private boolean majorSpell;
 
-	public Player(int ID) {
-		if (ID == 0) {
-			this.rotateAntiClockWise = AppInput.DPAD_LEFT;
-			this.rotateClockWise = AppInput.DPAD_RIGHT;
-			this.applyMajorSpell = AppInput.DPAD_UP;
-			this.applyMinorSpell = AppInput.DPAD_DOWN;
-			this.axisX = AppInput.AXIS_XL;
-			this.axisY = AppInput.AXIS_YL;
-		} else {
-			this.rotateAntiClockWise = AppInput.BUTTON_X;
-			this.rotateClockWise = AppInput.BUTTON_B;
-			this.applyMajorSpell = AppInput.BUTTON_Y;
-			this.applyMinorSpell = AppInput.BUTTON_A;
-			this.axisX = AppInput.AXIS_XR;
-			this.axisY = AppInput.AXIS_YR;
-		}
+	public Player(AppPlayer appPlayer) {
+		int colorID = appPlayer.getColorID();
+		int controllerID = appPlayer.getControllerID();
+		String name = appPlayer.getName();
+		this.fillColor = AppPlayer.FILL_COLORS[colorID];
+		this.strokeColor = AppPlayer.STROKE_COLORS[colorID];
+		this.controllerID = controllerID;
+		this.name = name;
+		this.rotateAntiClockWise = AppInput.BUTTON_X;
+		this.rotateClockWise = AppInput.BUTTON_B;
+		this.applyMajorSpell = AppInput.BUTTON_Y;
+		this.applyMinorSpell = AppInput.BUTTON_A;
+		this.axisX = AppInput.AXIS_XL;
+		this.axisY = AppInput.AXIS_YL;
 		this.clockWise = 0;
 		this.toBottom = 0;
 		this.toRight = 0;
@@ -55,26 +60,26 @@ public class Player {
 	public void poll(GameContainer container, StateBasedGame game, Input user) {
 		AppInput input = (AppInput) user;
 		this.clockWise = 0;
-		if (input.isButtonPressed(this.rotateAntiClockWise) && !input.isButtonPressed(this.rotateClockWise)) {
+		if (input.isButtonPressed(this.rotateAntiClockWise, this.controllerID) && !input.isButtonPressed(this.rotateClockWise, this.controllerID)) {
 			this.clockWise = -1;
 		}
-		if (!input.isButtonPressed(this.rotateAntiClockWise) && input.isButtonPressed(this.rotateClockWise)) {
+		if (!input.isButtonPressed(this.rotateAntiClockWise, this.controllerID) && input.isButtonPressed(this.rotateClockWise, this.controllerID)) {
 			this.clockWise = 1;
 		}
-		if (input.getAxisValue(this.axisY) < 0) {
+		if (input.getAxisValue(this.axisY, this.controllerID) < 0) {
 			this.toBottom = -1;
 		}
-		if (input.getAxisValue(this.axisY) > 0) {
+		if (input.getAxisValue(this.axisY, this.controllerID) > 0) {
 			this.toBottom = 1;
 		}
-		if (input.getAxisValue(this.axisX) < 0) {
+		if (input.getAxisValue(this.axisX, this.controllerID) < 0) {
 			this.toRight = -1;
 		}
-		if (input.getAxisValue(this.axisX) > 0) {
+		if (input.getAxisValue(this.axisX, this.controllerID) > 0) {
 			this.toRight = 1;
 		}
-		this.minorSpell = input.isButtonPressed(this.applyMinorSpell);
-		this.majorSpell = input.isButtonPressed(this.applyMajorSpell);
+		this.minorSpell = input.isButtonPressed(this.applyMinorSpell, this.controllerID);
+		this.majorSpell = input.isButtonPressed(this.applyMajorSpell, this.controllerID);
 	}
 
 	public void update(GameContainer container, StateBasedGame game, int delta) {
@@ -100,6 +105,10 @@ public class Player {
 		if (this.majorSpell) {
 		   // TODO: envoyer le sort majeur si possible
 		}
+	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics context) {
+		this.tetris.render(container, game, context, 0, 0, 0, 0); // TODO: changer les coordonnées
 	}
 
 	// Méthode à appeler à chaque fois qu'un bloc est posé

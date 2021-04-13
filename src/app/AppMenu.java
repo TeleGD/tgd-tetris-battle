@@ -19,6 +19,7 @@ public abstract class AppMenu extends AppPage {
 
 	static {
 		AppMenu.menuFont = AppLoader.loadFont("/fonts/vt323.ttf", AppFont.BOLD, 24);
+
 		AppMenu.menuLineHeight = 30;
 	}
 
@@ -26,7 +27,6 @@ public abstract class AppMenu extends AppPage {
 	private boolean forwardFlag;
 	private boolean upFlag;
 	private boolean downFlag;
-	private boolean canMove; //vrai quand on attends un deplaceement du stick
 
 	private List<MenuItem> menu;
 
@@ -63,7 +63,6 @@ public abstract class AppMenu extends AppPage {
 		this.forwardFlag = false;
 		this.upFlag = false;
 		this.downFlag = false;
-		this.canMove = false;
 
 		this.menuBoxX = this.contentX;
 		this.menuBoxY = this.subtitleBoxY + this.subtitleBoxHeight + AppPage.gap;
@@ -84,16 +83,42 @@ public abstract class AppMenu extends AppPage {
 	@Override
 	public final void poll(GameContainer container, StateBasedGame game, Input user) {
 		super.poll(container, game, user);
-		AppInput input = (AppInput) user;
-		this.forwardFlag = input.isButtonPressed(AppInput.BUTTON_A);
-		this.backFlag =  input.isButtonPressed(AppInput.BUTTON_B);
-		this.upFlag = canMove && input.isAxisPos(AppInput.AXIS_YL);
-		this.downFlag = canMove && input.isAxisNeg(AppInput.AXIS_YL);
-
-		if(this.upFlag || this.downFlag)
-			canMove = false;
-		if(input.getAxisValue(AppInput.AXIS_YL) == 0)
-			canMove = true;
+		AppInput input =(AppInput) user;
+		this.backFlag = false;
+		this.forwardFlag = false;
+		this.upFlag = false;
+		this.downFlag = false;
+		AppGame appGame =(AppGame) game;
+		if (appGame.appPlayers.size() != 0) {
+			AppPlayer gameMaster = appGame.appPlayers.get(0);
+			int gameMasterID = gameMaster.getControllerID();
+			boolean BUTTON_A = input.isKeyDown(AppInput.KEY_ENTER) || input.isButtonPressed(AppInput.BUTTON_A, gameMasterID);
+			boolean BUTTON_B = input.isKeyDown(AppInput.KEY_ESCAPE) || input.isButtonPressed(AppInput.BUTTON_B, gameMasterID);
+			boolean KEY_UP = input.isKeyDown(AppInput.KEY_UP) || input.isControllerUp(gameMasterID);
+			boolean KEY_DOWN = input.isKeyDown(AppInput.KEY_DOWN) || input.isControllerDown(gameMasterID);
+			boolean BUTTON_UP = KEY_UP && !KEY_DOWN;
+			boolean BUTTON_DOWN = KEY_DOWN && !KEY_UP;
+			int gameMasterRecord = gameMaster.getButtonPressedRecord();
+			if (BUTTON_A == ((gameMasterRecord & AppInput.BUTTON_A) == 0)) {
+				gameMasterRecord ^= AppInput.BUTTON_A;
+				this.forwardFlag = BUTTON_A;
+			}
+			if (BUTTON_B == ((gameMasterRecord & AppInput.BUTTON_B) == 0)) {
+				gameMasterRecord ^= AppInput.BUTTON_B;
+				this.backFlag = BUTTON_B;
+			}
+			int BIT_UP = 1 << (input.getButtonCount(gameMasterID) + (AppInput.AXIS_YL << 1));
+			if (BUTTON_UP == ((gameMasterRecord & BIT_UP) == 0)) {
+				gameMasterRecord ^= BIT_UP;
+				this.upFlag = BUTTON_UP;
+			}
+			int BIT_DOWN = 1 << (input.getButtonCount(gameMasterID) + ((AppInput.AXIS_YL << 1) | 1));
+			if (BUTTON_DOWN == ((gameMasterRecord & BIT_DOWN) == 0)) {
+				gameMasterRecord ^= BIT_DOWN;
+				this.downFlag = BUTTON_DOWN;
+			}
+			gameMaster.setButtonPressedRecord(gameMasterRecord);
+		}
 	}
 
 	@Override
@@ -167,7 +192,7 @@ public abstract class AppMenu extends AppPage {
 		}
 	}
 
-	public void setMenu(List<MenuItem>menu) {
+	public void setMenu(List<MenuItem> menu) {
 		this.menu = new ArrayList<MenuItem>();
 		this.menu.addAll(menu);
 		this.selectedItem = 0;
@@ -185,7 +210,7 @@ public abstract class AppMenu extends AppPage {
 		this.menuY = this.menuBoxY + (this.menuBoxHeight - this.menuHeight) / 2;
 	}
 
-	public List<MenuItem>getMenu() {
+	public List<MenuItem> getMenu() {
 		List<MenuItem> menu = new ArrayList<MenuItem>();
 		menu.addAll(this.menu);
 		return menu;

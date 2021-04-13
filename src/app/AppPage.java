@@ -123,6 +123,7 @@ public abstract class AppPage extends AppState {
 	@Override
 	public final void enter(GameContainer container, StateBasedGame game) {
 		AppInput appInput = (AppInput) container.getInput();
+		appInput.clearKeyPressedRecord();
 		appInput.clearControlPressedRecord();
 	}
 
@@ -183,6 +184,7 @@ public abstract class AppPage extends AppState {
 				if (a < 0) {
 					a *= -1;
 				}
+				a -= 128;
 				a = Math.max(Math.min(a, 255), 0);
 				context.setColor(new Color(r, g, b, a));
 			}
