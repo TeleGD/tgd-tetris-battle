@@ -81,8 +81,8 @@ public class World extends AppWorld {
 	{
 		/* Méthode exécutée environ 60 fois par seconde */
 		super.render(container, game, context);
-		for (Player player: this.players) {
-			player.render(container, game, context);
+		for (int k = 0, lk = this.players.length; k < lk; ++k) {
+			this.players[k].render(container, game, context, k, lk);
 		}
 	}
 

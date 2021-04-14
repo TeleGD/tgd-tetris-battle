@@ -34,6 +34,8 @@ public class Player {
 	private int toRight;
 	private boolean minorSpell;
 	private boolean majorSpell;
+	private int maxCountdown;
+	private int countdown;
 
 	public Player(AppPlayer appPlayer) {
 		int colorID = appPlayer.getColorID();
@@ -55,6 +57,8 @@ public class Player {
 		this.minorSpell = false;
 		this.majorSpell = false;
 		this.tetris = new Tetris(20, 10);
+		this.maxCountdown = 1000;
+		this.countdown = this.maxCountdown;
 	}
 
 	public void poll(GameContainer container, StateBasedGame game, Input user) {
@@ -66,16 +70,18 @@ public class Player {
 		if (!input.isButtonPressed(this.rotateAntiClockWise, this.controllerID) && input.isButtonPressed(this.rotateClockWise, this.controllerID)) {
 			this.clockWise = 1;
 		}
-		if (input.getAxisValue(this.axisY, this.controllerID) < 0) {
+		this.toBottom = 0;
+		if (input.getAxisValue(this.axisY, this.controllerID) < -.5) {
 			this.toBottom = -1;
 		}
-		if (input.getAxisValue(this.axisY, this.controllerID) > 0) {
+		if (input.getAxisValue(this.axisY, this.controllerID) > .5) {
 			this.toBottom = 1;
 		}
-		if (input.getAxisValue(this.axisX, this.controllerID) < 0) {
+		this.toRight = 0;
+		if (input.getAxisValue(this.axisX, this.controllerID) < -.5) {
 			this.toRight = -1;
 		}
-		if (input.getAxisValue(this.axisX, this.controllerID) > 0) {
+		if (input.getAxisValue(this.axisX, this.controllerID) > .5) {
 			this.toRight = 1;
 		}
 		this.minorSpell = input.isButtonPressed(this.applyMinorSpell, this.controllerID);
@@ -84,21 +90,34 @@ public class Player {
 
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		Multimino currentMultimino = this.tetris.getCurrentMultimino();
-		Multimino nextMultimino = currentMultimino.transform(this.clockWise, Math.abs(toBottom), toRight);
+		Multimino nextMultimino = currentMultimino.transform(this.clockWise, -Math.abs(toBottom), toRight);
 		boolean positionPossible = this.tetris.isPositionPossible(nextMultimino);
 		if (positionPossible) {
 			currentMultimino = nextMultimino;
 		}
-		if (this.toBottom == 1) {
-			for (;;) {
-				nextMultimino = currentMultimino.transform(0, -1, 0);
-				positionPossible = this.tetris.isPositionPossible(nextMultimino);
-				if (!positionPossible) {
-					break;
-				}
-				currentMultimino = nextMultimino;
-			};
+		while (this.toBottom == -1) {
+			nextMultimino = currentMultimino.transform(0, -1, 0);
+			positionPossible = this.tetris.isPositionPossible(nextMultimino);
+			if (!positionPossible) {
+				this.countdown -= this.maxCountdown;
+				break;
+			}
+			currentMultimino = nextMultimino;
 		}
+		this.countdown -= delta;
+		if (this.countdown <= 0) {
+			this.countdown += this.maxCountdown;
+			nextMultimino = currentMultimino.transform(0, -1, 0);
+			positionPossible = this.tetris.isPositionPossible(nextMultimino);
+			if (!positionPossible) {
+				this.maxCountdown = (int) (this.maxCountdown * .9) + 10;
+				this.tetris.drop();
+				currentMultimino = this.tetris.getCurrentMultimino();
+			} else {
+				currentMultimino = nextMultimino;
+			}
+		}
+		this.tetris.setCurrentMultimino(currentMultimino);
 		if (this.minorSpell) {
 		   // TODO: envoyer le sort mineur si possible
 		}
@@ -107,8 +126,15 @@ public class Player {
 		}
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context) {
-		this.tetris.render(container, game, context, 0, 0, 0, 0); // TODO: changer les coordonnées
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int k, int lk) {
+		int width = container.getWidth();
+		int height = container.getHeight();
+		int li = this.tetris.getLI();
+		int lj = this.tetris.getLJ();
+		int side = Math.min(width / (lk * (lj + 2)), height / (li + 2));
+		int x = (width * (k * 2 + 1) / lk - side * lj) / 2;
+		int y = (height + side * li) / 2;
+		this.tetris.render(container, game, context, x, y, side);
 	}
 
 	// Méthode à appeler à chaque fois qu'un bloc est posé
