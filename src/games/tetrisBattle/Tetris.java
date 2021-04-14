@@ -1,5 +1,6 @@
 package games.tetrisBattle;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
@@ -22,7 +23,6 @@ public class Tetris {
 		assert 0 <= lj;
 		this.li = li;
 		this.lj = lj;
-		this.currentMultimino = null;
 		List<List<Block>> grid = new LinkedList<List<Block>>();
 		for (int i = 0; i < li + 4; ++i) {
 			List<Block> line = new ArrayList<Block>();
@@ -32,6 +32,7 @@ public class Tetris {
 			grid.add(line);
 		}
 		this.blocks = grid;
+		this.currentMultimino = this.generateMultimino();
 		this.nextMultiminos = new ArrayList<Multimino>();
 		for (int k = 0; k < 5; ++k) {
 			this.nextMultiminos.add(this.generateMultimino());
@@ -88,10 +89,18 @@ public class Tetris {
 		List<List<Block>> shape = multimino.getShape();
 		int i = multimino.getI();
 		int j = multimino.getJ();
-		for (int k = 0, lk = shape.size(); k < lk; ++k) {
-			List<Block> line = shape.get(k);
-			for (int l = 0, ll = line.size(); l < ll; ++l) {
-				if (shape.get(k).get(l)!= null && (i-k<0 || i-k>=this.li || j+l<0 || j+l>this.lj || this.blocks.get(i-k).get(j+l)!= null)) {
+		int li = multimino.getLI();
+		int lj = multimino.getLJ();
+		for (int di = 0; di < li; ++di) {
+			int i2 = i + di;
+			List<Block> line = shape.get(di);
+			for (int dj = 0; dj < lj; ++dj) {
+				int j2 = j + dj;
+				Block block = line.get(dj);
+				if (block == null) {
+					continue;
+				}
+				if (i2 < 0 || j2 < 0 || i2 >= this.li + 4 || j2 >= this.lj || this.blocks.get(i2).get(j2) != null) {
 					return false;
 				}
 			}
@@ -122,7 +131,7 @@ public class Tetris {
 		}else {
 			tempSt="T";
 		}
-		Multimino result = new Multimino(0, 0, tempSt); // TODO: changer les coordonnées
+		Multimino result = new Multimino(this.li, this.lj / 2 - 2, tempSt);
 		return result;
 	}
 
@@ -139,15 +148,21 @@ public class Tetris {
 		return count;
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
-		for (int i = 0; i < this.li; ++i){   // Affichage des blocks fixes
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int side) {
+		context.setColor(Color.blue);
+		context.drawRect(xGrid, yGrid - side * li, side * lj, side * li);
+		for (int i = 0, li = this.li; i < li; ++i) {   // Affichage des blocks fixes
 			List<Block> line = blocks.get(i);
-			for(int j = 0; j < this.lj; ++j){
-				line.get(j).render(container, game, context, xGrid + j * width, yGrid + i * height, width, height);    //TODO : Adapter x et y en fonction de la position de ce Tetris et adapter son width et height
+			for(int j = 0, lj = this.lj; j < lj; ++j) {
+				Block block = line.get(j);
+				if (block == null) {
+					continue;
+				}
+				block.render(container, game, context, xGrid + j * side, yGrid - (i + 1) * side, side);
 			}
 		}
 
-		currentMultimino.render(container, game, context, xGrid, yGrid, width, height); // Affichage du Multimino qui est en train d'être placé
+		currentMultimino.render(container, game, context, xGrid, yGrid, side); // Affichage du Multimino qui est en train d'être placé
 	}
 
 	public int getLI() {
@@ -166,5 +181,27 @@ public class Tetris {
 		return this.currentMultimino;
 	}
 
+	public void drop() {
+		Multimino multimino = this.currentMultimino;
+		List<List<Block>> shape = multimino.getShape();
+		int i = multimino.getI();
+		int j = multimino.getJ();
+		int li = multimino.getLI();
+		int lj = multimino.getLJ();
+		for (int di = 0; di < li; ++di) {
+			int i2 = i + di;
+			List<Block> line = shape.get(di);
+			for (int dj = 0; dj < lj; ++dj) {
+				int j2 = j + dj;
+				Block block = line.get(dj);
+				if (block == null) {
+					continue;
+				}
+				this.blocks.get(i2).set(j2, block);
+			}
+		}
+		this.currentMultimino = this.nextMultiminos.remove(0);
+		this.nextMultiminos.add(this.generateMultimino());
+	}
 
 }

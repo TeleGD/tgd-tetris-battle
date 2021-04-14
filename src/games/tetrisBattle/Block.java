@@ -8,7 +8,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import java.util.List;
 
 public class Block {
-	
+
 	private Multimino multimino;
 	private Block[] neighbours;
 	/* la position 0 de neighbours est la gauche
@@ -16,19 +16,19 @@ public class Block {
 	 2 est la droite
 	 3 est le bas
 	 */
-	
+
 	public Block() {
 		this.neighbours = new Block[4];
 	}
-	
-	
+
+
 	public void delete() {
 		multimino.removeBlock(this);
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, int x, int y, int width, int height){
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int x, int y, int side) {
 		context.setColor(Color.red);
-		context.drawRect(x, y, width, height);
+		context.drawRect(x, y, side, side);
 	}
 
 	public void addNeighbour(int position, Block block) {

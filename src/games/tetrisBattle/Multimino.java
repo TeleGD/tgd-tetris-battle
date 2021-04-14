@@ -79,7 +79,7 @@ public class Multimino {
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
 				l2.add(null);l2.add(null);l2.add(new Block());l2.add(new Block());
 				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
-				l4.add(null);l4.add(new Block());l4.add(null);l4.add(null);
+				l4.add(null);l4.add(null);l4.add(null);l4.add(null);
 				break;
 			}
 			case "T": {
@@ -91,10 +91,10 @@ public class Multimino {
 			}
 		}
 		this.blocks = new ArrayList<List<Block>>();
-		this.blocks.add(l1);
-		this.blocks.add(l2);
-		this.blocks.add(l3);
 		this.blocks.add(l4);
+		this.blocks.add(l3);
+		this.blocks.add(l2);
+		this.blocks.add(l1);
 		this.linkNeighbour();
 
 	}
@@ -140,113 +140,31 @@ public class Multimino {
 	private void linkNeighbour() {
 		for (int i = 0; i < this.li; ++i) {
 			for (int j = 0; j < this.lj; ++j) {
-				if(i==0) {
-					//cas de la plus haute ligne
-					if(j==0) {
-						//cas de la colonne la plus a gauche
-						if(this.blocks.get(i+1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
-						}
-						if(this.blocks.get(i).get(j+1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
-						}
-					}else if (j==this.lj-1) {
-						//cas de la colonne la plus a droite
-						if(this.blocks.get(i+1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
-						}
-						if(this.blocks.get(i).get(j-1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
-						}
-					}else {
-						if(this.blocks.get(i+1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
-						}
-						if(this.blocks.get(i).get(j-1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
-						}
-						if(this.blocks.get(i).get(j+1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
-						}
+				Block block = this.blocks.get(i).get(j);
+				if (block == null) {
+					continue;
+				}
+				for (int k = 0; k < 3; ++k) {
+					int i2 = j + (k == 1 ? -1 : k == 3 ? 1 : 0);
+					int j2 = j + (k == 0 ? -1 : k == 2 ? 1 : 0);
+					if (i2 < 0 || j2 < 0 || i2 >= li || j2 >= lj) {
+						continue;
 					}
-
-				}else if(i==this.li-1) {
-					//cas de la plus basse ligne
-					if(j==0) {
-						//cas de la colonne la plus a gauche
-						if(this.blocks.get(i-1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
-						}
-						if(this.blocks.get(i).get(j+1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
-						}
-					}else if (j==this.lj-1) {
-						//cas de la colonne la plus a droite
-						if(this.blocks.get(i-1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i+1).get(j));
-						}
-						if(this.blocks.get(i).get(j-1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
-						}
-					}else {
-						if(this.blocks.get(i-1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
-						}
-						if(this.blocks.get(i).get(j-1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
-						}
-						if(this.blocks.get(i).get(j+1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
-						}
-
-					}
-				}else {
-					if(j==0) {
-						//cas de la colonne la plus a gauche
-						if(this.blocks.get(i+1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
-						}
-						if(this.blocks.get(i-1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
-						}
-						if(this.blocks.get(i).get(j+1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
-						}
-					}else if (j==this.lj-1) {
-						//cas de la colonne la plus a droite
-						if(this.blocks.get(i-1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i+1).get(j));
-						}
-						if(this.blocks.get(i).get(j-1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
-						}
-						if(this.blocks.get(i+1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
-						}
-					}else {
-						if(this.blocks.get(i-1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(1, this.blocks.get(i-1).get(j));
-						}
-						if(this.blocks.get(i).get(j-1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(0, this.blocks.get(i).get(j-1));
-						}
-						if(this.blocks.get(i).get(j+1) != null) {
-							this.blocks.get(i).get(j).addNeighbour(2, this.blocks.get(i).get(j+1));
-						}
-						if(this.blocks.get(i+1).get(j) != null) {
-							this.blocks.get(i).get(j).addNeighbour(3, this.blocks.get(i+1).get(j));
-						}
-					}
+					block.addNeighbour(k, this.blocks.get(i2).get(j2));
 				}
 			}
 		}
 	}
 
-	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int width, int height){
-		for (int i = 0; i < this.li; ++i) {
+	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int side) {
+		for (int i = 0, li = this.li; i < li; ++i) {
 			List<Block> line = blocks.get(i);
-			for (int j = 0; j < this.lj; ++j) {
-				line.get(j).render(container, game, context, xGrid + (this.j + j) * width, yGrid + (this.i + i) * height, width, height);
+			for (int j = 0, lj = this.lj; j < lj; ++j) {
+				Block block = line.get(j);
+				if (block == null) {
+					continue;
+				}
+				block.render(container, game, context, xGrid + (this.j + j) * side, yGrid - (this.i + i + 1) * side, side);
 			}
 		}
 	}
@@ -277,8 +195,8 @@ public class Multimino {
 			}
 			shape.add(line);
 		}
-		i = this.i + (lk - ll) / 2 + toBottom;
-		j = this.j + (ll - lj) / 2 + toRight;
+		int i = this.i + (lk - ll) / 2 + toBottom;
+		int j = this.j + (ll - lj) / 2 + toRight;
 		Multimino multimino = new Multimino(i, j, shape);
 		return multimino;
 	}
