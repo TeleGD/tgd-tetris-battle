@@ -1,11 +1,11 @@
 package games.tetrisBattle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Multimino {
 
@@ -28,7 +28,7 @@ public class Multimino {
 		this.linkNeighbour();
 	}
 
-	public Multimino(int i, int j, String nameBlock) {
+	public Multimino(int colorID, int i, int j, String nameBlock) {
 		assert 0 <= i;
 		assert 0 <= j;
 		this.i = i;
@@ -41,52 +41,87 @@ public class Multimino {
 		List<Block> l4 = new ArrayList<Block>();
 		switch (nameBlock) {
 			case "I": {
-				l1.add(null);l1.add(new Block());l1.add(null);l1.add(null);
-				l2.add(null);l2.add(new Block());l2.add(null);l2.add(null);
-				l3.add(null);l3.add(new Block());l3.add(null);l3.add(null);
-				l4.add(null);l4.add(new Block());l4.add(null);l4.add(null);
+				if (colorID != 0) {
+					colorID = 0;
+				} else {
+					colorID = 7;
+				}
+				l1.add(null);l1.add(new Block(colorID));l1.add(null);l1.add(null);
+				l2.add(null);l2.add(new Block(colorID));l2.add(null);l2.add(null);
+				l3.add(null);l3.add(new Block(colorID));l3.add(null);l3.add(null);
+				l4.add(null);l4.add(new Block(colorID));l4.add(null);l4.add(null);
 				break;
 			}
 			case "L": {
+				if (colorID != 1) {
+					colorID = 1;
+				} else {
+					colorID = 7;
+				}
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
-				l2.add(null);l2.add(new Block());l2.add(null);l2.add(null);
-				l3.add(null);l3.add(new Block());l3.add(null);l3.add(null);
-				l4.add(null);l4.add(new Block());l4.add(new Block());l4.add(null);
+				l2.add(null);l2.add(new Block(colorID));l2.add(null);l2.add(null);
+				l3.add(null);l3.add(new Block(colorID));l3.add(null);l3.add(null);
+				l4.add(null);l4.add(new Block(colorID));l4.add(new Block(colorID));l4.add(null);
 				break;
 			}
 			case "J": {
+				if (colorID != 2) {
+					colorID = 2;
+				} else {
+					colorID = 7;
+				}
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
-				l2.add(null);l2.add(null);l2.add(new Block());l2.add(null);
-				l3.add(null);l3.add(null);l3.add(new Block());l3.add(null);
-				l4.add(null);l4.add(new Block());l4.add(new Block());l4.add(null);
+				l2.add(null);l2.add(null);l2.add(new Block(colorID));l2.add(null);
+				l3.add(null);l3.add(null);l3.add(new Block(colorID));l3.add(null);
+				l4.add(null);l4.add(new Block(colorID));l4.add(new Block(colorID));l4.add(null);
 				break;
 			}
 			case "O": {
+				if (colorID != 3) {
+					colorID = 3;
+				} else {
+					colorID = 7;
+				}
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
-				l2.add(null);l2.add(new Block());l2.add(new Block());l2.add(null);
-				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
+				l2.add(null);l2.add(new Block(colorID));l2.add(new Block(colorID));l2.add(null);
+				l3.add(null);l3.add(new Block(colorID));l3.add(new Block(colorID));l3.add(null);
 				l4.add(null);l4.add(null);l4.add(null);l4.add(null);
 				break;
 			}
 			case "Z": {
+				if (colorID != 4) {
+					colorID = 4;
+				} else {
+					colorID = 7;
+				}
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
-				l2.add(new Block());l2.add(new Block());l2.add(null);l2.add(null);
-				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
+				l2.add(new Block(colorID));l2.add(new Block(colorID));l2.add(null);l2.add(null);
+				l3.add(null);l3.add(new Block(colorID));l3.add(new Block(colorID));l3.add(null);
 				l4.add(null);l4.add(null);l4.add(null);l4.add(null);
 				break;
 			}
 			case "S": {
+				if (colorID != 5) {
+					colorID = 5;
+				} else {
+					colorID = 7;
+				}
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
-				l2.add(null);l2.add(null);l2.add(new Block());l2.add(new Block());
-				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
+				l2.add(null);l2.add(null);l2.add(new Block(colorID));l2.add(new Block(colorID));
+				l3.add(null);l3.add(new Block(colorID));l3.add(new Block(colorID));l3.add(null);
 				l4.add(null);l4.add(null);l4.add(null);l4.add(null);
 				break;
 			}
 			case "T": {
+				if (colorID != 6) {
+					colorID = 6;
+				} else {
+					colorID = 7;
+				}
 				l1.add(null);l1.add(null);l1.add(null);l1.add(null);
-				l2.add(null);l2.add(new Block());l2.add(null);l2.add(null);
-				l3.add(null);l3.add(new Block());l3.add(new Block());l3.add(null);
-				l4.add(null);l4.add(new Block());l4.add(null);l4.add(null);
+				l2.add(null);l2.add(new Block(colorID));l2.add(null);l2.add(null);
+				l3.add(null);l3.add(new Block(colorID));l3.add(new Block(colorID));l3.add(null);
+				l4.add(null);l4.add(new Block(colorID));l4.add(null);l4.add(null);
 				break;
 			}
 		}

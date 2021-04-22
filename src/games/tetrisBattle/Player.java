@@ -56,7 +56,7 @@ public class Player {
 		this.toRight = 0;
 		this.minorSpell = false;
 		this.majorSpell = false;
-		this.tetris = new Tetris(20, 10);
+		this.tetris = new Tetris(colorID, 20, 10);
 		this.maxCountdown = 1000;
 		this.countdown = this.maxCountdown;
 	}
