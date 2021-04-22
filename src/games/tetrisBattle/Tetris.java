@@ -1,16 +1,18 @@
 package games.tetrisBattle;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.state.StateBasedGame;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
+import app.AppPlayer;
+
 public class Tetris {
 
+	private int colorID;
 	private int li;
 	private int lj;
 	private Multimino currentMultimino;
@@ -18,9 +20,10 @@ public class Tetris {
 	private List<List<Block>> blocks;
 	private List<Multimino> nextMultiminos;
 
-	public Tetris(int li, int lj) {
+	public Tetris(int colorID, int li, int lj) {
 		assert 0 <= li;
 		assert 0 <= lj;
+		this.colorID = colorID;
 		this.li = li;
 		this.lj = lj;
 		List<List<Block>> grid = new LinkedList<List<Block>>();
@@ -131,7 +134,7 @@ public class Tetris {
 		}else {
 			tempSt="T";
 		}
-		Multimino result = new Multimino(this.li, this.lj / 2 - 2, tempSt);
+		Multimino result = new Multimino(this.colorID, this.li, this.lj / 2 - 2, tempSt);
 		return result;
 	}
 
@@ -149,11 +152,23 @@ public class Tetris {
 	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics context, int xGrid, int yGrid, int side) {
-		context.setColor(Color.blue);
-		context.drawRect(xGrid, yGrid - side * li, side * lj, side * li);
-		for (int i = 0, li = this.li; i < li; ++i) {   // Affichage des blocks fixes
+		int li = this.li;
+		int lj = this.lj;
+		context.setColor(AppPlayer.FILL_COLORS[this.colorID]);
+		context.fillRect(xGrid - 2, yGrid - side * li - 2, side * lj + 4, side * li + 4);
+		context.setColor(AppPlayer.STROKE_COLORS[this.colorID]);
+		context.setLineWidth(2);
+		for (int i = 1; i < li; ++i) {
+			context.drawLine(xGrid, yGrid - i * side, xGrid + lj * side, yGrid - i * side);
+		}
+		for (int j = 1; j < lj; ++j) {
+			context.drawLine(xGrid + j * side, yGrid - li * side, xGrid + j * side, yGrid);
+		}
+		context.setLineWidth(4);
+		context.drawRect(xGrid - 2, yGrid - side * li - 2, side * lj + 4, side * li + 4);
+		for (int i = 0; i < li; ++i) {   // Affichage des blocks fixes
 			List<Block> line = blocks.get(i);
-			for(int j = 0, lj = this.lj; j < lj; ++j) {
+			for(int j = 0; j < lj; ++j) {
 				Block block = line.get(j);
 				if (block == null) {
 					continue;
